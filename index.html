@@ -573,14 +573,14 @@ section {
             			id: message.id,
             			status: message.status,
             			tracker: null,
-                  userId: newUserId,
-                  demoAcc: message.demoAcc,
-						      azaName: message.azaName,
-						      realAcc: message.realAcc,
-						      name: message.name,
-						      amount: 0,
-                  request: message.request,
-						      update: message.update
+                  		userId: newUserId,
+                  		demoAcc: message.demoAcc,
+					    azaName: message.azaName,
+						realAcc: message.realAcc,
+						name: message.name,
+						amount: 0,
+                  		request: message.request,
+				      	update: message.update
                   });
                   localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
                   displaySavedUsers();
@@ -589,13 +589,13 @@ section {
         }
 		
         // UPDATOR using UserId
-    		function updateUserById(id, property, value) {
-    			const itemIndex = savedUsers.findIndex(user => user.userId === id);
-    			if (itemIndex !== -1) {
-    				savedUsers[itemIndex][property] = value;
-    				localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
-    			}
+    	function updateUserById(id, property, value) {
+    		const itemIndex = savedUsers.findIndex(user => user.userId === id);
+    		if (itemIndex !== -1) {
+    			savedUsers[itemIndex][property] = value;
+    			localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
     		}
+    	}
             
         // Start polling when page loads
         window.addEventListener('load', () => {
