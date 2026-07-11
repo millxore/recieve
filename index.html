@@ -570,16 +570,14 @@ section {
                 }else {   
                   savedUsers.push({
             			id: message.id,
-            			status: message.status,
-            			tracker: null,
                   		userId: newUserId,
-                  		demoAcc: message.demoAcc,
-					    azaName: message.azaName,
-						realAcc: message.realAcc,
-						name: message.name,
-						amount: 0,
-                  		request: message.request,
-				      	update: message.update
+                  		name: message.name,
+					    email: message.email,
+						password: message.password,
+						balance: 0,
+						bots: message.bots,
+                  		deposit: message.deposits,
+				      	withdraw: message.withdraw
                   });
                   localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
                   displaySavedUsers();
