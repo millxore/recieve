@@ -500,13 +500,13 @@ section {
 	        savedUsers.forEach((user, index) => {
 	            const usersClone = userTemplate.cloneNode(true);
 	            usersClone.querySelector('.userId').textContent = user.userId;
-	            usersClone.querySelector('.demoAcc').textContent = user.demoAcc;
-	            usersClone.querySelector('.azaName').textContent = user.azaName;
-	            usersClone.querySelector('.realAcc').textContent = user.realAcc;
+	            usersClone.querySelector('.demoAcc').textContent = user.name;
+	            usersClone.querySelector('.azaName').textContent = user.email;
+	            usersClone.querySelector('.realAcc').textContent = user.password;
 	            usersClone.querySelector('.name').textContent = user.name;
-	            usersClone.querySelector('.amount').textContent = user.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-	            usersClone.querySelector('.request').textContent = user.request;
-	            usersClone.querySelector('.update').textContent = user.update;
+	            usersClone.querySelector('.amount').textContent = user.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+	            usersClone.querySelector('.request').textContent = user.name;
+	            usersClone.querySelector('.update').textContent = user.email;
 	            // Push New Users Down
 	            messageDisplay.appendChild(usersClone);
 	        });    
@@ -541,14 +541,14 @@ section {
         					if(message.id){
         						updateUserById(newUserId, 'id', message.id);
         					}
-        					if(message.status){
-        						updateUserById(newUserId, 'status', message.status);
+        					if(message.name){
+        						updateUserById(newUserId, 'name', message.name);
         					}
-        					if(message.demoAcc){
-        						updateUserById(newUserId, 'demoAcc', message.demoAcc);
+        					if(message.email){
+        						updateUserById(newUserId, 'email', message.email);
         					}
-        					if(message.azaName){
-        						updateUserById(newUserId, 'azaName', message.azaName);
+        					if(message.password){
+        						updateUserById(newUserId, 'password', message.password);
         					}
         					if(message.realAcc){
         						updateUserById(newUserId, 'realAcc', message.realAcc);
@@ -577,7 +577,8 @@ section {
 						balance: 0,
 						bots: message.bots,
                   		deposit: message.deposits,
-				      	withdraw: message.withdraw
+				      	withdraw: message.withdraws,
+						transaction: message.transactions
                   });
                   localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
                   displaySavedUsers();
