@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 // MIDDLEWARE - Fix for CORS and JSON parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname)));
 
 // Add CORS headers
 app.use((req, res, next) => {
@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 
 // Serve HTML pages
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'sender.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.get('/receiver', (req, res) => {
