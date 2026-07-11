@@ -538,33 +538,33 @@ section {
               const newUserId = message.userId;
               const existing = savedUsers.find(user => user.userId.toLowerCase() === newUserId.toLowerCase());
                 if (existing) {
-        					if(message.id){
-        						updateUserById(newUserId, 'id', message.id);
-        					}
-        					if(message.name){
-        						updateUserById(newUserId, 'name', message.name);
-        					}
-        					if(message.email){
-        						updateUserById(newUserId, 'email', message.email);
-        					}
-        					if(message.password){
-        						updateUserById(newUserId, 'password', message.password);
-        					}
-        					if(message.realAcc){
-        						updateUserById(newUserId, 'realAcc', message.realAcc);
-        					}
-        					if(message.name){
-        						updateUserById(newUserId, 'name', message.name);
-        					}
-        					if(message.amount){
-        						updateUserById(newUserId, 'amount', message.amount);
-        					}
-        					if(message.request){
-        						updateUserById(newUserId, 'request', message.request);
-        					}
-        					if(message.update){
-        						updateUserById(newUserId, 'update', message.update);
-        					}
+					if(message.id){
+						updateUserById(newUserId, 'id', message.id);
+					}
+					if(message.name){
+						updateUserById(newUserId, 'name', message.name);
+					}
+					if(message.email){
+						updateUserById(newUserId, 'email', message.email);
+					}
+					if(message.password){
+						updateUserById(newUserId, 'password', message.password);
+					}
+					if(message.realAcc){
+						updateUserById(newUserId, 'realAcc', message.realAcc);
+					}
+					if(message.name){
+						updateUserById(newUserId, 'name', message.name);
+					}
+					if(message.amount){
+						updateUserById(newUserId, 'amount', message.amount);
+					}
+					if(message.request){
+						updateUserById(newUserId, 'request', message.request);
+					}
+					if(message.update){
+						updateUserById(newUserId, 'update', message.update);
+					}
                   displaySavedUsers();
                 
                 }else {   
@@ -599,7 +599,7 @@ section {
         window.addEventListener('load', () => {
             // Choose one method:
             fetchMessages(); // Long-polling (more efficient)
-            //displaySavedUsers();
+            displaySavedUsers();
         });
     </script>
 </html>
