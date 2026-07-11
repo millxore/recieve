@@ -389,79 +389,79 @@ section {
     
     
 		// Form submission
-    const nameForm = document.getElementById('nameForm');
+	    const nameForm = document.getElementById('nameForm');
 		const amountForm = document.getElementById('amountForm');
 		const updateForm = document.getElementById('updateForm');
-    const inputs = document.querySelectorAll('.input');
+	    const inputs = document.querySelectorAll('.input');
 
 		// Submit Name
-    nameForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const formData = new FormData(nameForm);
-      const userId = formData.get('userId');
-      const name = formData.get('name');
-			sender({ userId: userId, name: name });
-			inputs.forEach((input) => {
-			input.value = '';
-			});   
-    });
-    
+		nameForm.addEventListener('submit', (event) => {
+		  event.preventDefault();
+		  const formData = new FormData(nameForm);
+		  const userId = formData.get('userId');
+		  const name = formData.get('name');
+				sender({ userId: userId, name: name });
+				inputs.forEach((input) => {
+				input.value = '';
+				});   
+		});
+		
 		// Submit Amount
 		amountForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const formData = new FormData(amountForm);
-      const userId = formData.get('userId');
-			const amountInput = amountForm.amount;
-      const amount = amountInput.valueAsNumber;
-			sender({ userId: userId, amount: amount });
-			inputs.forEach((input) => {
-			input.value = '';
-			});
-    });
+	      event.preventDefault();
+	      const formData = new FormData(amountForm);
+	      const userId = formData.get('userId');
+	      const amountInput = amountForm.amount;
+	      const amount = amountInput.valueAsNumber;
+				sender({ userId: userId, amount: amount });
+				inputs.forEach((input) => {
+				input.value = '';
+				});
+		});
     
 		// Submit Update
 		updateForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const formData = new FormData(updateForm);
-      const userId = formData.get('userId');
-      const update = formData.get('update');
-			const payName = formData.get('payName');
-			const payNumber = formData.get('payNumber');
-			if(update !== '') {
-				sender({ userId: userId, update: update });
-			}
-			if(payName !== '' && payNumber !== '') {
-				sender({ userId: userId, payName: payName, payNumber: payNumber });
-			}
-			inputs.forEach((input) => {
-				input.value = '';
-			});
-    });
+	      event.preventDefault();
+	      const formData = new FormData(updateForm);
+	      const userId = formData.get('userId');
+	      const update = formData.get('update');
+				const payName = formData.get('payName');
+				const payNumber = formData.get('payNumber');
+				if(update !== '') {
+					sender({ userId: userId, update: update });
+				}
+				if(payName !== '' && payNumber !== '') {
+					sender({ userId: userId, payName: payName, payNumber: payNumber });
+				}
+				inputs.forEach((input) => {
+					input.value = '';
+				});
+		});
 		
 		// Pop up modal
-    function openModal(modalId) {
-      const modal = document.getElementById(modalId);
-      if (modal) {
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent scrolling
-        // Add event listener for Escape key
-        document.addEventListener('keydown', handleEscapeKey);
-        // Add event listener for outside click
-        modal.addEventListener('click', handleOutsideClick);   
-      }    
-    }
-
-    function closeModal(modalId) {
-      const modal = document.getElementById(modalId);
-      if (modal) {
-      modal.classList.remove('active');
-      document.body.style.overflow = 'auto'; // Restore scrolling
-                
-      // Remove event listeners
-      document.removeEventListener('keydown', handleEscapeKey);
-      modal.removeEventListener('click', handleOutsideClick);
-      }
-    }
+	    function openModal(modalId) {
+	      const modal = document.getElementById(modalId);
+	      if (modal) {
+	        modal.classList.add('active');
+	        document.body.style.overflow = 'hidden'; // Prevent scrolling
+	        // Add event listener for Escape key
+	        document.addEventListener('keydown', handleEscapeKey);
+	        // Add event listener for outside click
+	        modal.addEventListener('click', handleOutsideClick);   
+	      }    
+	    }
+	
+	    function closeModal(modalId) {
+	      const modal = document.getElementById(modalId);
+	      if (modal) {
+	      modal.classList.remove('active');
+	      document.body.style.overflow = 'auto'; // Restore scrolling
+	                
+	      // Remove event listeners
+	      document.removeEventListener('keydown', handleEscapeKey);
+	      modal.removeEventListener('click', handleOutsideClick);
+	      }
+	    }
 		
    
 		// Format milliseconds into "X minutes ago", etc.
@@ -493,25 +493,25 @@ section {
     //messageDisplay.children[0].remove();
 
 		// Display Messages
-    function displaySavedUsers() {
-         // Remove current display Users
-        const existingUsers = messageDisplay.querySelectorAll('.user');
-        existingUsers.forEach(user => user.remove());
-            
-        savedUsers.forEach((user, index) => {
-            const usersClone = userTemplate.cloneNode(true);
-            usersClone.querySelector('.userId').textContent = user.userId;
-            usersClone.querySelector('.demoAcc').textContent = user.demoAcc;
-            usersClone.querySelector('.azaName').textContent = user.azaName;
-            usersClone.querySelector('.realAcc').textContent = user.realAcc;
-            usersClone.querySelector('.name').textContent = user.name;
-            usersClone.querySelector('.amount').textContent = user.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            usersClone.querySelector('.request').textContent = user.request;
-            usersClone.querySelector('.update').textContent = user.update;
-            // Push New Users Down
-            messageDisplay.appendChild(usersClone);
-        });    
-    }
+	    function displaySavedUsers() {
+	         // Remove current display Users
+	        const existingUsers = messageDisplay.querySelectorAll('.user');
+	        existingUsers.forEach(user => user.remove());
+	            
+	        savedUsers.forEach((user, index) => {
+	            const usersClone = userTemplate.cloneNode(true);
+	            usersClone.querySelector('.userId').textContent = user.userId;
+	            usersClone.querySelector('.demoAcc').textContent = user.demoAcc;
+	            usersClone.querySelector('.azaName').textContent = user.azaName;
+	            usersClone.querySelector('.realAcc').textContent = user.realAcc;
+	            usersClone.querySelector('.name').textContent = user.name;
+	            usersClone.querySelector('.amount').textContent = user.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+	            usersClone.querySelector('.request').textContent = user.request;
+	            usersClone.querySelector('.update').textContent = user.update;
+	            // Push New Users Down
+	            messageDisplay.appendChild(usersClone);
+	        });    
+	    }
     
         // First code to fetch New Messages
         async function fetchMessages() {
