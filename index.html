@@ -485,12 +485,11 @@ section {
 
 
 		// MAIN CODE FOR FETCH AND DISPLAYING MESSAGES
-    
-    const messageDisplay = document.getElementById('messageDisplay');
-    const userTemplate = messageDisplay.querySelector('.user');
-    let lastMessageId = localStorage.getItem('lastId') || 0;
-    let savedUsers = JSON.parse(localStorage.getItem('savedUsers')) || [];
-    //messageDisplay.children[0].remove();
+	    const messageDisplay = document.getElementById('messageDisplay');
+	    const userTemplate = messageDisplay.querySelector('.user');
+	    let lastMessageId = localStorage.getItem('lastId') || 0;
+	    let savedUsers = JSON.parse(localStorage.getItem('savedUsers')) || [];
+	    //messageDisplay.children[0].remove();
 
 		// Display Messages
 	    function displaySavedUsers() {
