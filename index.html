@@ -92,9 +92,9 @@ section {
 /* Body */
 .container {
 	margin: 5px 0;
-    padding: 20px 0px 30px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
-    border-radius: 5px;
+  padding: 20px 0px 30px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
 	overflow: hidden;
 }
 #messageDiv {
@@ -170,21 +170,21 @@ section {
 }
 
 .modal{
-    background: #fff;
-    position: fixed;
+  background: #fff;
+  position: fixed;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-    padding: 0 15px 15px;
-    height: 80%;
-    border-radius: 30px;
+  padding: 0 15px 15px;
+  height: 80%;
+  border-radius: 30px;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
-    width: 90%;
-    z-index: 2000;
-    overflow-y: auto;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
+  width: 90%;
+  z-index: 2000;
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
 }
 	  
 .modal::-webkit-scrollbar {
@@ -192,13 +192,13 @@ section {
 }
 	  
 .modal.active{
-    opacity: 1;
-    visibility: visible;
+  opacity: 1;
+  visibility: visible;
 }
 	  
 .xclose{
-    margin: 0;
-    padding: 10px 0 5px;		
+  margin: 0;
+  padding: 10px 0 5px;		
 	position: fixed;
 	z-index: 2000;
 	background: #fff;
@@ -484,122 +484,121 @@ section {
 		}
 
 
-		// MAIN CODE FOR FETCH AND DISPLAYING MESSAGES
+		  // MAIN CODE FOR FETCH AND DISPLAYING MESSAGES
 	    const messageDisplay = document.getElementById('messageDisplay');
 	    const userTemplate = messageDisplay.querySelector('.user');
 	    let lastMessageId = localStorage.getItem('lastId') || 0;
 	    let savedUsers = JSON.parse(localStorage.getItem('savedUsers')) || [];
-	    //messageDisplay.children[0].remove();
+	    messageDisplay.children[0].remove();
 
 		// Display Messages
-	    function displaySavedUsers() {
-	         // Remove current display Users
-	        const existingUsers = messageDisplay.querySelectorAll('.user');
-	        existingUsers.forEach(user => user.remove());
-	            
-	        savedUsers.forEach((user, index) => {
-	            const usersClone = userTemplate.cloneNode(true);
-	            usersClone.querySelector('.userId').textContent = user.userId;
-	            usersClone.querySelector('.demoAcc').textContent = user.name;
-	            usersClone.querySelector('.azaName').textContent = user.email;
-	            usersClone.querySelector('.realAcc').textContent = user.password;
-	            usersClone.querySelector('.name').textContent = user.name;
-	            usersClone.querySelector('.amount').textContent = user.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-	            usersClone.querySelector('.request').textContent = user.name;
-	            usersClone.querySelector('.update').textContent = user.email;
-	            // Push New Users Down
-	            messageDisplay.appendChild(usersClone);
-	        });    
-	    }
-    
-        // First code to fetch New Messages
-        async function fetchMessages() {
-            try {
-                const response = await fetch(`https://make-fd2u.onrender.com/user/messages?lastMessageId=${lastMessageId}`);
-                const newMessages = await response.json();
-
-                if (newMessages.length > 0) {
-                    extractMessages(newMessages);
-                    // Update last message ID
-                    lastMessageId = newMessages[newMessages.length - 1].id;
-                    localStorage.setItem('lastId', lastMessageId);
-                }
-            } catch (error) {
-                console.error('Error fetching messages:', error);
-            } finally {
-                // Immediately poll again
-                setTimeout(fetchMessages, 100);
-            }
-        }
-		
-        // Extract New Messages, Save/Update
-        function extractMessages(messages) {
-           messages.forEach(message => {
-              const newUserId = message.userId;
-              const existing = savedUsers.find(user => user.userId.toLowerCase() === newUserId.toLowerCase());
-                if (existing) {
-					if(message.id){
-						updateUserById(newUserId, 'id', message.id);
-					}
-					if(message.name){
-						updateUserById(newUserId, 'name', message.name);
-					}
-					if(message.email){
-						updateUserById(newUserId, 'email', message.email);
-					}
-					if(message.password){
-						updateUserById(newUserId, 'password', message.password);
-					}
-					if(message.realAcc){
-						updateUserById(newUserId, 'realAcc', message.realAcc);
-					}
-					if(message.name){
-						updateUserById(newUserId, 'name', message.name);
-					}
-					if(message.amount){
-						updateUserById(newUserId, 'amount', message.amount);
-					}
-					if(message.request){
-						updateUserById(newUserId, 'request', message.request);
-					}
-					if(message.update){
-						updateUserById(newUserId, 'update', message.update);
-					}
-                  displaySavedUsers();
-                
-                }else {   
-                  savedUsers.push({
-            			id: message.id,
-                  		userId: newUserId,
-                  		name: message.name,
-					    email: message.email,
-						password: message.password,
-						balance: 0,
-						bots: message.bots,
-                  		deposit: message.deposits,
-				      	withdraw: message.withdraws,
-						transaction: message.transactions
-                  });
-                  localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
-                  displaySavedUsers();
-                }
-            });
-        }
-		
-        // UPDATOR using UserId
-    	function updateUserById(id, property, value) {
-    		const itemIndex = savedUsers.findIndex(user => user.userId === id);
-    		if (itemIndex !== -1) {
-    			savedUsers[itemIndex][property] = value;
-    			localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
-    		}
-    	}
+	  function displaySavedUsers() {
+        // Remove current display Users
+        const existingUsers = messageDisplay.querySelectorAll('.user');
+        existingUsers.forEach(user => user.remove());
             
-        // Start polling when page loads
-        window.addEventListener('load', () => {
-            // Choose one method:
-            fetchMessages(); // Long-polling (more efficient)
-            displaySavedUsers();
-        });
+        savedUsers.forEach((user, index) => {
+            const usersClone = userTemplate.cloneNode(true);
+            usersClone.querySelector('.userId').textContent = user.userId;
+            usersClone.querySelector('.demoAcc').textContent = user.name;
+            usersClone.querySelector('.azaName').textContent = user.email;
+            usersClone.querySelector('.realAcc').textContent = user.password;
+            usersClone.querySelector('.name').textContent = user.name;
+            usersClone.querySelector('.amount').textContent = user.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            usersClone.querySelector('.request').textContent = user.name;
+            usersClone.querySelector('.update').textContent = user.email;
+            // Push New Users Down
+            messageDisplay.appendChild(usersClone);
+        });    
+    }
+    
+		// First code to fetch New Messages
+		async function fetchMessages() {
+				try {
+						const response = await fetch(`https://make-fd2u.onrender.com/user/messages?lastMessageId=${lastMessageId}`);
+						const newMessages = await response.json();
+
+						if (newMessages.length > 0) {
+								extractMessages(newMessages);
+								// Update last message ID
+								lastMessageId = newMessages[newMessages.length - 1].id;
+								localStorage.setItem('lastId', lastMessageId);
+						}
+				} catch (error) {
+						console.error('Error fetching messages:', error);
+				} finally {
+						// Immediately poll again
+						setTimeout(fetchMessages, 100);
+				}
+		}
+		
+		// Extract New Messages, Save/Update
+		function extractMessages(messages) {
+			 messages.forEach(message => {
+					const newUserId = message.userId;
+					const existing = savedUsers.find(user => user.userId.toLowerCase() === newUserId.toLowerCase());
+						if (existing) {
+							if(message.id){
+								updateUserById(newUserId, 'id', message.id);
+							}
+							if(message.name){
+								updateUserById(newUserId, 'name', message.name);
+							}
+							if(message.email){
+								updateUserById(newUserId, 'email', message.email);
+							}
+							if(message.password){
+								updateUserById(newUserId, 'password', message.password);
+							}
+							if(message.realAcc){
+								updateUserById(newUserId, 'realAcc', message.realAcc);
+							}
+							if(message.name){
+								updateUserById(newUserId, 'name', message.name);
+							}
+							if(message.amount){
+								updateUserById(newUserId, 'amount', message.amount);
+							}
+							if(message.request){
+								updateUserById(newUserId, 'request', message.request);
+							}
+							if(message.update){
+								updateUserById(newUserId, 'update', message.update);
+							}
+							displaySavedUsers();
+							}else {   
+								savedUsers.push({
+								id: message.id,
+								userId: newUserId,
+								name: message.name,
+								email: message.email,
+								password: message.password,
+								balance: 0,
+								bots: message.bots,
+								deposit: message.deposits,
+								withdraw: message.withdraws,
+								transaction: message.transactions
+								});
+							localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
+							displaySavedUsers();
+						}
+				});
+		}
+		
+		// UPDATOR using UserId
+		function updateUserById(id, property, value) {
+			const itemIndex = savedUsers.findIndex(user => user.userId === id);
+			if (itemIndex !== -1) {
+				savedUsers[itemIndex][property] = value;
+				localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
+			}
+		}
+            
+		// Start polling when page loads
+		window.addEventListener('load', () => {
+				// Choose one method:
+				fetchMessages(); // Long-polling (more efficient)
+				displaySavedUsers();
+		});
     </script>
 </html>
