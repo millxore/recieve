@@ -52,27 +52,16 @@ app.post('/send', async (req, res) => {
 // Load messages from file on startup
 let messages = [];
 let clients = [];
-let sends = [];
-let users = [];
 
-// POST endpoint to receive messages (From Users)
-app.post('/api/messages', async (req, res) => {
-    const { userId, status, demoAcc, azaName, realAcc, name, amount, request, update } = req.body;
+// POST endpoint to receive messages (To Users)
+app.post('/my/messages', async (req, res) => {
     
-    const newMessage = {
-        id: Date.now(),
-        userId: userId,
-        status: status,
-        demoAcc: demoAcc,
-        azaName: azaName,
-        realAcc: realAcc,
-        name: name,
-        amount: amount,
-        request: request,
-        update: update,
+    const newMessage = { 
+        id: Date.now(), 
+        ...req.body,
         time: new Date().toISOString()
     };
-
+    
     // Save to memory
     messages.push(newMessage);
 
@@ -85,35 +74,10 @@ app.post('/api/messages', async (req, res) => {
     res.json({ success: true, message: newMessage });
 });
 
-// POST endpoint to receive messages (To Users)
-app.post('/in/messages', async (req, res) => {
-    const { userId, name, amount, update, payName, payNumber } = req.body;
-    
-    const newMessage = {
-        id: Date.now(),
-        userId: userId,
-        name: name,
-        amount: amount,
-        update: update,
-        payName: payName, 
-        payNumber: payNumber,
-        time: new Date().toISOString()
-    };
+   
 
-    // Save to memory
-    sends.push(newMessage);
-
-    // Notify waiting clients
-    users.forEach(user => {
-        user.res.json([newMessage]);
-    });
-    users = [];
-    
-    res.json({ success: true, message: newMessage });
-});
-
-// GET endpoint to retrieve messages (From Users)
-app.get('/api/messages', (req, res) => {
+// GET endpoint to retrieve messages (From Me)
+app.get('/my/messages', (req, res) => {
     const lastMessageId = req.query.lastMessageId || 0;
     
     // Check if there are new messages
@@ -143,35 +107,6 @@ app.get('/api/messages', (req, res) => {
 });
 
 
-// GET endpoint to retrieve messages (To Users)
-app.get('/in/messages', (req, res) => {
-    const lastMessageId = req.query.lastMessageId || 0;
-    
-    // Check if there are new messages
-    const newMessages = sends.filter(msg => msg.id > lastMessageId);
-    
-    if (newMessages.length > 0) {
-        // Return immediately if there's a new message
-        res.json(newMessages);
-    } else {
-        // Store the client request for long-polling
-        const user = {
-            id: Date.now(),
-            res: res,
-            lastMessageId: lastMessageId
-        };
-        users.push(user);
-        
-        // Set timeout for long-polling (30 seconds max)
-        setTimeout(() => {
-            const index = users.findIndex(u => u.id === user.id);
-            if (index !== -1) {
-                users.splice(index, 1);
-                res.json([]);
-            }
-        }, 30000);
-    }
-});
 
 // Clear all messages 
 app.delete('/api/messages', (req, res) => {
@@ -183,11 +118,6 @@ app.delete('/api/messages', (req, res) => {
 // Get all messages (for initial load)
 app.get('/api/messages/all', (req, res) => {
     res.json(messages);
-});
-
-// Get all sends (for initial load)
-app.get('/in/messages/all', (req, res) => {
-    res.json(sends);
 });
 
 app.listen(PORT, '0.0.0.0', () => {
