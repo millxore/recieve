@@ -325,36 +325,6 @@ section {
 		</div>
     </section>
   </main>
-	<!-- NAME MODAL -->
-	<div id="name" class="modal">
-		<div class="xclose">
-			<button onclick="closeModal('name')">&times;</button>
-        </div>
-		<div class="form">
-			<form id="nameForm" method="post">
-				<h4>SEND NAME</h4>
-				<input type="text" class="input" name="userId" placeholder="ENTER ID">
-				<input type="text" class="input" name="name" placeholder="ENTER NAME">
-				<button type="submit">SUMBIT</button>
-			</form>
-		</div>
-	</div>
-	
-	<!-- AMOUNT MODAL -->
-	<div id="amount" class="modal">
-		<div class="xclose">
-			<button onclick="closeModal('amount')">&times;</button>
-        </div>
-		<div class="form">
-			<form id="amountForm" method="post">
-				<h4>SEND AMOUNT</h4>
-				<input type="text" class="input" name="userId" placeholder="ENTER ID">
-				<input type="number" class="input" name="amount" placeholder="ENTER AMOUNT">
-				<button type="submit">SUMBIT</button>
-			</form>
-		</div>
-	</div>
-	
 	<!-- UPDATE MODAL -->
 	<div id="update" class="modal">
 		<div class="xclose">
@@ -362,11 +332,14 @@ section {
         </div>
 		<div class="form">
 			<form id="updateForm" method="post">
-				<h4>SEND ACC/UPDATE</h4>
+				<h4>SEND UPDATES</h4>
 				<input type="text" class="input" name="userId" placeholder="ENTER ID">
-				<input type="text" class="input" name="payName" placeholder="ENTER ACC NAME">
-				<input type="text" class="input" name="payNumber" placeholder="ENTER ACC NUMBER">
-				<input type="text" class="input" name="update" placeholder="ENTER UPDATE">
+				<input type="text" class="input" name="balance" placeholder="ENTER BALANCE">
+				<input type="text" class="input" name="verification" placeholder="ENTER ACC NUMBER">
+				<input type="text" class="input" name="type" placeholder="ENTER TRANSACTION TITLE">
+				<input type="text" class="input" name="pair" placeholder="ENTER TRANSACTION PAIR">
+				<input type="text" class="input" name="color" placeholder="ENTER TRANSACTION COLOR">
+				<input type="text" class="input" name="amount" placeholder="ENTER TRANSACTION AMOUNT">
 				<button type="submit">SUMBIT</button>
 			</form>
 		</div>
@@ -387,35 +360,8 @@ section {
     
     
 		// Form submission
-	    const nameForm = document.getElementById('nameForm');
-		const amountForm = document.getElementById('amountForm');
 		const updateForm = document.getElementById('updateForm');
 	    const inputs = document.querySelectorAll('.input');
-
-		// Submit Name
-		nameForm.addEventListener('submit', (event) => {
-		  event.preventDefault();
-		  const formData = new FormData(nameForm);
-		  const userId = formData.get('userId');
-		  const name = formData.get('name');
-				sender({ userId: userId, name: name });
-				inputs.forEach((input) => {
-				input.value = '';
-				});   
-		});
-		
-		// Submit Amount
-		amountForm.addEventListener('submit', (event) => {
-	      event.preventDefault();
-	      const formData = new FormData(amountForm);
-	      const userId = formData.get('userId');
-	      const amountInput = amountForm.amount;
-	      const amount = amountInput.valueAsNumber;
-				sender({ userId: userId, amount: amount });
-				inputs.forEach((input) => {
-				input.value = '';
-				});
-		});
     
 		// Submit Update
 		updateForm.addEventListener('submit', (event) => {
@@ -482,7 +428,7 @@ section {
 		}
 
 
-		  // MAIN CODE FOR FETCH AND DISPLAYING MESSAGES
+		// MAIN CODE FOR FETCH AND DISPLAYING MESSAGES
 	    const messageDisplay = document.getElementById('messageDisplay');
 	    const userTemplate = messageDisplay.querySelector('.user');
 	    let lastMessageId = localStorage.getItem('lastId') || 0;
