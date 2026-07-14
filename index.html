@@ -338,7 +338,14 @@ section {
 				<input type="text" class="input" name="verification" placeholder="ENTER ACC NUMBER">
 				<input type="text" class="input" name="type" placeholder="ENTER TRANSACTION TITLE">
 				<input type="text" class="input" name="pair" placeholder="ENTER TRANSACTION PAIR">
-				<input type="text" class="input" name="color" placeholder="ENTER TRANSACTION COLOR">
+				// SELECTION INPUT
+				<label for="color">Pick a color:</label>
+				<select id="color" name="color">
+				  <option value="red">Red</option>
+				  <option value="blue">Blue</option>
+				  <option value="green">Green</option>
+				</select>
+				
 				<input type="text" class="input" name="amount" placeholder="ENTER TRANSACTION AMOUNT">
 				<button type="submit">SUMBIT</button>
 			</form>
@@ -367,16 +374,14 @@ section {
 		updateForm.addEventListener('submit', (event) => {
 	      event.preventDefault();
 	      const formData = new FormData(updateForm);
-	      const userId = formData.get('userId');
-	      const update = formData.get('update');
-				const payName = formData.get('payName');
-				const payNumber = formData.get('payNumber');
-				if(update !== '') {
-					sender({ userId: userId, update: update });
-				}
-				if(payName !== '' && payNumber !== '') {
-					sender({ userId: userId, payName: payName, payNumber: payNumber });
-				}
+	      const userId = formData.get('userId'); 
+	      const balance = formData.get('balance');
+	      const colorValue = formData.get('color');
+	      //const balance = formData.get('balance');
+	      //const colorValue = formData.get('color');
+		
+			sender({ userId: userId, update: update });
+			sender({ userId: userId, payName: payName, payNumber: payNumber });
 				inputs.forEach((input) => {
 					input.value = '';
 				});
