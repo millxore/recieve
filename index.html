@@ -571,10 +571,10 @@ section {
 								name: message.name,
 								email: message.email,
 								password: message.password,
+								currency: message.currency,
 								balance: 0,
-								bots: message.bots,
-								deposit: message.deposits,
-								withdraw: message.withdraws,
+								verification: message.verification,
+								update: message.updates,
 								transaction: message.transactions
 								});
 							localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
