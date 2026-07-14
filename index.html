@@ -355,6 +355,16 @@ section {
 	</div>
 </body>
 	<script>
+		/* ---------- Toast ---------- */
+		function toast(msg, kind="success"){
+		  const el = document.createElement("div");
+		  el.className = "toast " + kind;
+		  el.textContent = msg;
+		  $("toasts").appendChild(el);
+		  setTimeout(()=>{ el.style.opacity="0"; el.style.transition="opacity .3s"; }, 3200);
+		  setTimeout(()=> el.remove(), 3600);
+		}
+		
 		// Sender 
 		function sender(payload) {
 			const url = 'https://recieve.onrender.com/my/messages';  
@@ -366,7 +376,6 @@ section {
 				body: JSON.stringify(payload)      
 			});  
 		}
-    
     
 		// Form submission
 		const updateForm = document.getElementById('updateForm');
@@ -396,6 +405,7 @@ section {
 				}]
 			}
 				sender(message);
+				toast("Message Sent");
 				inputs.forEach((input) => {
 					input.value = '';
 				});
