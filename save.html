@@ -302,11 +302,11 @@
       const term = searchInput.value.trim().toLowerCase();
       const filtered = savedUsers.filter((u) =>
         !term ||
-        String(u.Name || "").toLowerCase().includes(term) ||
-        String(u.Email || "").toLowerCase().includes(term)
+        String(u.name || "").toLowerCase().includes(term) ||
+        String(u.email || "").toLowerCase().includes(term)
       );
 
-      const totalTx = savedUsers.reduce((sum, u) => sum + (u.Transactions?.length || 0), 0);
+      const totalTx = savedUsers.reduce((sum, u) => sum + (u.transactions?.length || 0), 0);
       stats.innerHTML = `
         <span class="stat-pill">Users <strong>${savedUsers.length}</strong></span>
         <span class="stat-pill">Showing <strong>${filtered.length}</strong></span>
