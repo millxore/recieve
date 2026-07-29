@@ -189,42 +189,10 @@
   </div>
 
   <script>
-    // =========================================================================
-    // 1. DEMO DATA — savedUsers: userId, Name, Email, Transactions[]
-    //    Each transaction: { title, date, message }
-    // =========================================================================
-    const demoUsers = [
-      {
-        userId: "1",
-        name: "Adeola Ogunlesi",
-        email: "adeola.ogunlesi@example.com",
-        transactions: [
-          { title: "Wallet Top-up", date: "2024-01-12", message: "Added ₦50,000 via bank transfer." },
-          { title: "Subscription", date: "2024-02-01", message: "Monthly Pro plan renewed successfully." },
-          { title: "Refund", date: "2024-02-18", message: "Refund issued for duplicate charge." }
-        ]
-      },
-      //{
-        //userId: "5",
-        //name: "Amara Diallo",
-        //email: "amara.diallo@example.com",
-        //transactions: [
-          //{ title: "Ad Spend", date: "2024-06-01", message: "Campaign budget charged for June." },
-          //{ title: "Refund", date: "2024-06-14", message: "Partial refund for cancelled campaign." },
-          //{ title: "Payout", date: "2024-06-28", message: "Affiliate payout processed." }
-        //]
-      //}
-    ];
-
     const STORAGE_KEY = "savedUsers";
 
-    // Seed localStorage on first visit so the page always has data.
-    if (!localStorage.getItem(STORAGE_KEY)) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(demoUsers));
-    }
-
     // =========================================================================
-    // 2. LOAD FROM LOCALSTORAGE
+    // 1. LOAD FROM LOCALSTORAGE
     // =========================================================================
     let savedUsers = [];
     try {
@@ -238,7 +206,7 @@
     }
 
     // =========================================================================
-    // 3. DOM REFERENCES
+    // 2. DOM REFERENCES
     // =========================================================================
     const listView = document.getElementById("listView");
     const detailView = document.getElementById("detailView");
