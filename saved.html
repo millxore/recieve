@@ -74,11 +74,11 @@
 <div class="wrap">
   <header>
     <h1>Saved <span>Users</span></h1>
-    <p class="sub">Loaded from <code>localStorage.savedUsers</code> — click a username to reveal details.</p>
+    <p class="sub">Loaded from <code>localStorage.savedUsers</code> — click a User ID to reveal that user's details.</p>
   </header>
 
   <div class="toolbar">
-    <input type="search" id="search" placeholder="Search usernames…" autocomplete="off" />
+    <input type="search" id="search" placeholder="Search by User ID…" autocomplete="off" />
   </div>
 
   <div class="list" id="list"></div>
@@ -108,12 +108,24 @@
     }
   }
 
+  var ID_KEYS = ['UserId','userId','userID','UserID','user_id','id','Id','ID'];
+
+  function idKeyOf(u) {
+    for (var i = 0; i < ID_KEYS.length; i++) {
+      if (u && Object.prototype.hasOwnProperty.call(u, ID_KEYS[i])) return ID_KEYS[i];
+    }
+    return null;
+  }
+
   function nameOf(u, i) {
-    return u.username || u.userName || u.name || u.fullName || u.email || ('User ' + (i + 1));
+    var k = idKeyOf(u);
+    if (k && u[k] !== undefined && u[k] !== null && u[k] !== '') return String(u[k]);
+    return 'User ' + (i + 1);
   }
 
   function initials(n) {
-    return n.trim().split(/[\s._-]+/).slice(0, 2).map(function (p) { return p[0]; }).join('').toUpperCase();
+    var s = String(n).replace(/[^A-Za-z0-9]/g, '');
+    return (s.slice(-2) || '#').toUpperCase();
   }
 
   function label(key) {
@@ -167,8 +179,10 @@
       var grid = document.createElement('div');
       grid.className = 'grid';
 
+      var idKey = idKeyOf(u);
       Object.keys(u).forEach(function (key) {
         if (SENSITIVE.test(key)) return;
+        if (key === idKey) return;
         var f = document.createElement('div');
         f.className = 'field';
         var k = document.createElement('span');
