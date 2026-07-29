@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Saved Users — NovaTrade</title>
+<style>
+  :root{
+    --bg:#0c1416; --surface:#131e21; --surface-2:#182629;
+    --fg:#eef6f2; --muted:#93a8a5; --primary:#4ef58f; --primary-dim:#2bd97a;
+    --border:rgba(120,180,160,.18); --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; padding:40px 18px;
+    background:
+      radial-gradient(ellipse at top, rgba(78,245,143,.13), transparent 60%),
+      var(--bg);
+    color:var(--fg);
+    font-family:ui-sans-serif,system-ui,-apple-system,"Inter",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto}
+  header{margin-bottom:26px}
+  h1{margin:0 0 6px;font-size:1.9rem;letter-spacing:-.02em}
+  h1 span{background:linear-gradient(135deg,var(--primary),#a6ffcf);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{margin:0;color:var(--muted);font-size:.92rem}
+  .toolbar{display:flex;gap:10px;margin:18px 0}
+  input[type=search]{
+    flex:1;padding:11px 14px;border-radius:10px;background:var(--surface-2);
+    border:1px solid var(--border);color:var(--fg);font-size:.92rem;outline:none;
+  }
+  input[type=search]:focus{border-color:var(--primary)}
+  .list{display:flex;flex-direction:column;gap:10px}
+  .user{
+    background:linear-gradient(180deg,var(--surface-2),var(--surface));
+    border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
+    transition:border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+  }
+  .user:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 12px 34px -18px var(--primary)}
+  .user.open{border-color:var(--primary)}
+  .row{
+    display:flex;align-items:center;gap:14px;width:100%;padding:15px 18px;
+    background:none;border:0;color:inherit;font:inherit;cursor:pointer;text-align:left;
+  }
+  .avatar{
+    width:38px;height:38px;flex:none;border-radius:50%;display:grid;place-items:center;
+    font-weight:700;font-size:.85rem;color:#0c1416;
+    background:linear-gradient(135deg,var(--primary),var(--primary-dim));
+  }
+  .name{flex:1;font-weight:600;letter-spacing:-.01em}
+  .chev{color:var(--muted);transition:transform .3s ease}
+  .user.open .chev{transform:rotate(180deg);color:var(--primary)}
+  .details{
+    max-height:0;overflow:hidden;
+    transition:max-height .45s cubic-bezier(.4,0,.2,1), opacity .3s ease;
+    opacity:0;
+  }
+  .user.open .details{max-height:900px;opacity:1}
+  .details-inner{padding:2px 18px 18px;border-top:1px solid var(--border);margin-top:0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;padding-top:14px}
+  .field{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+  .k{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:4px}
+  .v{font-size:.92rem;word-break:break-word}
+  .empty{
+    text-align:center;padding:50px 20px;border:1px dashed var(--border);
+    border-radius:var(--radius);color:var(--muted);background:var(--surface)
+  }
+  .empty b{color:var(--fg)}
+  code{background:var(--surface-2);padding:2px 6px;border-radius:6px;color:var(--primary);font-size:.85em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Saved <span>Users</span></h1>
+    <p class="sub">Loaded from <code>localStorage.savedUsers</code> — click a username to reveal details.</p>
+  </header>
+
+  <div class="toolbar">
+    <input type="search" id="search" placeholder="Search usernames…" autocomplete="off" />
+  </div>
+
+  <div class="list" id="list"></div>
+</div>
+
+<script>
+(function () {
+  var list = document.getElementById('list');
+  var search = document.getElementById('search');
+
+  function loadUsers() {
+    try {
+      var raw = localStorage.getItem('savedUsers');
+      if (!raw) return [];
+      var data = JSON.parse(raw);
+      if (Array.isArray(data)) return data;
+      if (data && typeof data === 'object') {
+        // object map: { username: {...} }
+        return Object.keys(data).map(function (k) {
+          var v = data[k];
+          return (v && typeof v === 'object') ? Object.assign({ username: k }, v) : { username: k, value: v };
+        });
+      }
+      return [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function nameOf(u, i) {
+    return u.username || u.userName || u.name || u.fullName || u.email || ('User ' + (i + 1));
+  }
+
+  function initials(n) {
+    return n.trim().split(/[\s._-]+/).slice(0, 2).map(function (p) { return p[0]; }).join('').toUpperCase();
+  }
+
+  function label(key) {
+    return key.replace(/[_-]/g, ' ').replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+  }
+
+  function fmt(val) {
+    if (val === null || val === undefined || val === '') return '—';
+    if (typeof val === 'object') return JSON.stringify(val, null, 2);
+    if (typeof val === 'boolean') return val ? 'Yes' : 'No';
+    return String(val);
+  }
+
+  var SENSITIVE = /^(password|pass|pwd|confirmpassword|token)$/i;
+
+  var users = loadUsers();
+
+  function render(filter) {
+    var q = (filter || '').toLowerCase();
+    var shown = users.filter(function (u, i) { return nameOf(u, i).toLowerCase().indexOf(q) > -1; });
+
+    if (!users.length) {
+      list.innerHTML = '<div class="empty"><b>No saved users found.</b><br>Nothing stored under <code>savedUsers</code> in this browser.</div>';
+      return;
+    }
+    if (!shown.length) {
+      list.innerHTML = '<div class="empty">No users match <b>' + (filter || '') + '</b>.</div>';
+      return;
+    }
+
+    list.innerHTML = '';
+    shown.forEach(function (u, idx) {
+      var name = nameOf(u, users.indexOf(u));
+      var card = document.createElement('div');
+      card.className = 'user';
+
+      var btn = document.createElement('button');
+      btn.className = 'row';
+      btn.type = 'button';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.innerHTML =
+        '<span class="avatar">' + initials(name) + '</span>' +
+        '<span class="name"></span>' +
+        '<span class="chev">&#9662;</span>';
+      btn.querySelector('.name').textContent = name;
+
+      var details = document.createElement('div');
+      details.className = 'details';
+      var inner = document.createElement('div');
+      inner.className = 'details-inner';
+      var grid = document.createElement('div');
+      grid.className = 'grid';
+
+      Object.keys(u).forEach(function (key) {
+        if (SENSITIVE.test(key)) return;
+        var f = document.createElement('div');
+        f.className = 'field';
+        var k = document.createElement('span');
+        k.className = 'k';
+        k.textContent = label(key);
+        var v = document.createElement('div');
+        v.className = 'v';
+        v.textContent = fmt(u[key]);
+        f.appendChild(k); f.appendChild(v);
+        grid.appendChild(f);
+      });
+
+      if (!grid.children.length) {
+        grid.innerHTML = '<div class="field"><div class="v">No additional details.</div></div>';
+      }
+
+      inner.appendChild(grid);
+      details.appendChild(inner);
+      card.appendChild(btn);
+      card.appendChild(details);
+      list.appendChild(card);
+
+      btn.addEventListener('click', function () {
+        var isOpen = card.classList.contains('open');
+        // close others
+        Array.prototype.forEach.call(list.querySelectorAll('.user.open'), function (el) {
+          el.classList.remove('open');
+          el.querySelector('.row').setAttribute('aria-expanded', 'false');
+        });
+        if (!isOpen) {
+          card.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  }
+
+  search.addEventListener('input', function () { render(search.value); });
+  render('');
+})();
+</script>
+</body>
+</html>
