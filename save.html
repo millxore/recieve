@@ -189,11 +189,10 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "savedUsers";
-
     // =========================================================================
     // 1. LOAD FROM LOCALSTORAGE
     // =========================================================================
+    const STORAGE_KEY = "savedUsers";
     let savedUsers = [];
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
