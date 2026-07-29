@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Users Directory</title>
   <style>
-    /* CSS custom properties — one place to change colors, spacing, and radius */
     :root {
       --background: #0a0b14;
       --surface: #11121f;
@@ -19,15 +18,9 @@
       --radius: 0.75rem;
       --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
       --success: #22c55e;
-      --warning: #f59e0b;
-      --danger: #ef4444;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
@@ -39,37 +32,18 @@
       padding: 2rem 1rem;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+    .container { max-width: 1100px; margin: 0 auto; }
 
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    header p {
-      color: var(--text-secondary);
-      margin-top: 0.5rem;
-    }
+    header { text-align: center; margin-bottom: 2rem; }
+    header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; }
+    header p { color: var(--text-secondary); margin-top: 0.5rem; }
 
     .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      justify-content: center;
-      margin-bottom: 1.5rem;
+      display: flex; flex-wrap: wrap; gap: 0.75rem;
+      justify-content: center; margin-bottom: 1.5rem;
     }
 
-    .controls input,
-    .controls select {
+    .controls input {
       background: var(--surface);
       border: 1px solid var(--border);
       color: var(--text-primary);
@@ -77,30 +51,13 @@
       border-radius: var(--radius);
       font-size: 0.95rem;
       outline: none;
+      min-width: 280px;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    .controls input:focus,
-    .controls select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--ring);
-    }
+    .controls input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--ring); }
 
-    .controls input {
-      min-width: 260px;
-    }
-
-    .controls select {
-      cursor: pointer;
-    }
-
-    .stats {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
+    .stats { display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
 
     .stat-pill {
       background: var(--surface);
@@ -110,18 +67,10 @@
       font-size: 0.85rem;
       color: var(--text-secondary);
     }
+    .stat-pill strong { color: var(--text-primary); }
 
-    .stat-pill strong {
-      color: var(--text-primary);
-    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1rem;
-    }
-
-    /* Card is a button-like container because clicking reveals details */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -130,167 +79,89 @@
       box-shadow: var(--shadow);
       transition: transform 0.2s, border-color 0.2s, background 0.2s;
       cursor: pointer;
-      /* Make the whole card keyboard-focusable */
       outline: none;
+      text-align: left;
+      width: 100%;
+      font: inherit;
+      color: inherit;
     }
 
-    /* Hover/focus states give feedback that the card is clickable */
-    .card:hover,
-    .card:focus-visible {
+    .card:hover, .card:focus-visible {
       transform: translateY(-3px);
       border-color: rgba(245, 166, 35, 0.35);
       background: var(--surface-elevated);
     }
+    .card:focus-visible { box-shadow: 0 0 0 3px var(--ring); }
 
-    .card:focus-visible {
-      box-shadow: 0 0 0 3px var(--ring);
-    }
-
-    /* The header always shows the avatar, name, and position (role) */
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 0.875rem;
-    }
+    .card-header { display: flex; align-items: center; gap: 0.875rem; }
 
     .avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
+      width: 48px; height: 48px; border-radius: 50%;
       background: linear-gradient(135deg, #f5a623, #d97706);
-      display: grid;
-      place-items: center;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: #fff;
-      flex-shrink: 0;
+      display: grid; place-items: center;
+      font-weight: 700; font-size: 1.1rem; color: #fff; flex-shrink: 0;
+    }
+    .avatar.lg { width: 64px; height: 64px; font-size: 1.4rem; }
+
+    .name { font-size: 1.05rem; font-weight: 600; line-height: 1.2; }
+    .email { font-size: 0.8rem; color: var(--accent); margin-top: 0.2rem; word-break: break-all; }
+    .hint { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem; }
+
+    /* ---------- Detail view ---------- */
+    .detail-view {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
     }
 
-    .name {
-      font-size: 1.05rem;
-      font-weight: 600;
-      line-height: 1.2;
-    }
-
-    .position {
-      font-size: 0.8rem;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-top: 0.2rem;
-    }
-
-    .hint {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      margin-top: 0.25rem;
-    }
-
-    /* Details are hidden by default; .open reveals them */
-    .details {
-      list-style: none;
-      display: none;
-      flex-direction: column;
-      gap: 0.6rem;
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .details.open {
-      display: flex;
-    }
-
-    .detail {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      font-size: 0.9rem;
-      padding: 0.35rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .detail:last-child {
-      border-bottom: none;
-    }
-
-    .detail-label {
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .detail-value {
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
       color: var(--text-primary);
-      text-align: right;
-      word-break: break-word;
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius);
+      font-size: 0.9rem; cursor: pointer;
+      margin-bottom: 1.25rem;
+      transition: border-color 0.2s, background 0.2s;
     }
+    .back-btn:hover { border-color: var(--accent); background: #1f2236; }
+    .back-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--ring); }
 
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 0.25rem 0.6rem;
-      border-radius: 999px;
-      border: 1px solid transparent;
-    }
+    .detail-head { display: flex; align-items: center; gap: 1rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
+    .detail-head .name { font-size: 1.35rem; }
+    .meta { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem; }
 
-    .status.active {
-      background: rgba(34, 197, 94, 0.12);
-      color: var(--success);
-      border-color: rgba(34, 197, 94, 0.25);
-    }
-
-    .status.inactive {
-      background: rgba(239, 68, 68, 0.12);
-      color: var(--danger);
-      border-color: rgba(239, 68, 68, 0.25);
-    }
-
-    .status.pending {
-      background: rgba(245, 158, 11, 0.12);
-      color: var(--warning);
-      border-color: rgba(245, 158, 11, 0.25);
-    }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-    }
-
-    .status.active .status-dot { background: var(--success); }
-    .status.inactive .status-dot { background: var(--danger); }
-    .status.pending .status-dot { background: var(--warning); }
-
-    .empty {
-      text-align: center;
-      padding: 3rem 1rem;
+    .section-title {
+      margin: 1.5rem 0 0.75rem;
+      font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
       color: var(--text-secondary);
     }
 
-    .empty svg {
-      width: 64px;
-      height: 64px;
-      margin-bottom: 1rem;
-      opacity: 0.5;
-    }
+    .tx-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
 
-    .icon {
-      width: 1em;
-      height: 1em;
-      display: inline-block;
-      vertical-align: middle;
+    .tx {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
     }
+    .tx-top { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+    .tx-title { font-weight: 600; font-size: 0.98rem; }
+    .tx-date { font-size: 0.78rem; color: var(--text-secondary); white-space: nowrap; }
+    .tx-message { margin-top: 0.35rem; font-size: 0.88rem; color: var(--text-secondary); }
+
+    .empty { text-align: center; padding: 3rem 1rem; color: var(--text-secondary); }
+
+    .hidden { display: none !important; }
 
     @media (max-width: 640px) {
       header h1 { font-size: 1.5rem; }
       .controls input { min-width: 100%; }
       .grid { grid-template-columns: 1fr; }
+      .tx-top { flex-direction: column; gap: 0.15rem; }
     }
   </style>
 </head>
@@ -298,343 +169,254 @@
   <div class="container">
     <header>
       <h1>Users Directory</h1>
-      <p>Click a name or position to reveal the full details.</p>
+      <p id="subtitle">Click a user to see only that user's details.</p>
     </header>
 
-    <!-- Search and filter controls -->
-    <div class="controls">
-      <input
-        type="text"
-        id="search"
-        placeholder="Search by name, email, role..."
-        aria-label="Search users"
-      />
-      <select id="statusFilter" aria-label="Filter by status">
-        <option value="">All statuses</option>
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-        <option value="pending">Pending</option>
-      </select>
-      <select id="roleFilter" aria-label="Filter by role">
-        <option value="">All roles</option>
-      </select>
-    </div>
+    <!-- LIST VIEW -->
+    <section id="listView">
+      <div class="controls">
+        <input type="text" id="search" placeholder="Search by name or email..." aria-label="Search users" />
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="grid" id="userGrid"></div>
+    </section>
 
-    <!-- Stats row rendered by JavaScript -->
-    <div class="stats" id="stats"></div>
-
-    <!-- Grid rendered by JavaScript -->
-    <div class="grid" id="userGrid"></div>
+    <!-- DETAIL VIEW (hidden until a user is clicked) -->
+    <section id="detailView" class="hidden">
+      <button class="back-btn" id="backBtn" type="button">&larr; Back to all users</button>
+      <div class="detail-view" id="detailContent"></div>
+    </section>
   </div>
 
   <script>
-    // =============================================================================
-    // 1. DEMO USER DATA — saved automatically when the page is first opened
-    // =============================================================================
-    // This array is the demo data. If localStorage already has "savedUsers" or
-    // "storedUsers", the existing data is used instead. On a fresh visit, this
-    // demo data is saved under the key "savedUsers" so the page never shows
-    // "No users found" on first load.
+    // =========================================================================
+    // 1. DEMO DATA — savedUsers: userId, Name, Email, Transactions[]
+    //    Each transaction: { title, date, message }
+    // =========================================================================
     const demoUsers = [
       {
-        id: "1",
-        firstName: "Adeola",
-        lastName: "Ogunlesi",
-        role: "Product Manager",
+        userId: "1",
+        name: "Adeola Ogunlesi",
         email: "adeola.ogunlesi@example.com",
-        department: "Product",
-        location: "Lagos, Nigeria",
-        phone: "+234 803 123 4567",
-        joined: "2023-01-15",
-        status: "active"
+        transactions: [
+          { title: "Wallet Top-up", date: "2024-01-12", message: "Added ₦50,000 via bank transfer." },
+          { title: "Subscription", date: "2024-02-01", message: "Monthly Pro plan renewed successfully." },
+          { title: "Refund", date: "2024-02-18", message: "Refund issued for duplicate charge." }
+        ]
       },
       {
-        id: "2",
-        firstName: "Kwame",
-        lastName: "Asante",
-        role: "Frontend Engineer",
+        userId: "2",
+        name: "Kwame Asante",
         email: "kwame.asante@example.com",
-        department: "Engineering",
-        location: "Accra, Ghana",
-        phone: "+233 24 567 8901",
-        joined: "2023-03-22",
-        status: "active"
+        transactions: [
+          { title: "Payout", date: "2024-03-04", message: "Weekly payout sent to GTBank ****2231." },
+          { title: "Wallet Top-up", date: "2024-03-22", message: "Added ₵1,200 via mobile money." }
+        ]
       },
       {
-        id: "3",
-        firstName: "Chinwe",
-        lastName: "Nwosu",
-        role: "UX Designer",
+        userId: "3",
+        name: "Chinwe Nwosu",
         email: "chinwe.nwosu@example.com",
-        department: "Design",
-        location: "Abuja, Nigeria",
-        phone: "+234 705 987 6543",
-        joined: "2023-06-10",
-        status: "pending"
+        transactions: [
+          { title: "Invoice Paid", date: "2024-04-09", message: "Invoice #INV-1043 marked as paid." },
+          { title: "Card Charge", date: "2024-04-15", message: "Design tool licence billed to Visa ****4417." },
+          { title: "Withdrawal", date: "2024-05-02", message: "Withdrew ₦120,000 to savings account." }
+        ]
       },
       {
-        id: "4",
-        firstName: "Juma",
-        lastName: "Mwangi",
-        role: "DevOps Engineer",
+        userId: "4",
+        name: "Juma Mwangi",
         email: "juma.mwangi@example.com",
-        department: "Engineering",
-        location: "Nairobi, Kenya",
-        phone: "+254 712 345 678",
-        joined: "2022-11-05",
-        status: "inactive"
+        transactions: [
+          { title: "Wallet Top-up", date: "2024-05-11", message: "Added KSh 15,000 via M-Pesa." }
+        ]
       },
       {
-        id: "5",
-        firstName: "Amara",
-        lastName: "Diallo",
-        role: "Marketing Lead",
+        userId: "5",
+        name: "Amara Diallo",
         email: "amara.diallo@example.com",
-        department: "Marketing",
-        location: "Dakar, Senegal",
-        phone: "+221 77 123 4567",
-        joined: "2023-08-30",
-        status: "active"
+        transactions: [
+          { title: "Ad Spend", date: "2024-06-01", message: "Campaign budget charged for June." },
+          { title: "Refund", date: "2024-06-14", message: "Partial refund for cancelled campaign." },
+          { title: "Payout", date: "2024-06-28", message: "Affiliate payout processed." }
+        ]
       }
     ];
 
-    // Save the demo users to localStorage under the key "savedUsers" if the key
-    // does not already exist. This way, the first time the page opens it has data
-    // to display, and any later edits you make in localStorage will persist.
-    if (!localStorage.getItem("savedUsers") && !localStorage.getItem("storedUsers")) {
-      localStorage.setItem("savedUsers", JSON.stringify(demoUsers));
+    const STORAGE_KEY = "savedUsers";
+
+    // Seed localStorage on first visit so the page always has data.
+    if (!localStorage.getItem(STORAGE_KEY)) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(demoUsers));
     }
 
-    // =============================================================================
-    // 2. LOAD USERS FROM LOCALSTORAGE
-    // =============================================================================
-    // The app first checks for the key "savedUsers". If that is missing, it falls
-    // back to the older key "storedUsers". If neither key exists, it uses an
-    // empty array so the page still renders with an empty-state message.
-    let storedUsers = [];
+    // =========================================================================
+    // 2. LOAD FROM LOCALSTORAGE
+    // =========================================================================
+    let savedUsers = [];
     try {
-      // Try the primary key first, then the fallback key.
-      const raw = localStorage.getItem("savedUsers") || localStorage.getItem("storedUsers");
-      // localStorage only stores strings, so we parse the JSON back into an array.
-      if (raw) storedUsers = JSON.parse(raw);
-      // Guard against non-array values — if someone saved something else, reset it.
-      if (!Array.isArray(storedUsers)) storedUsers = [];
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) savedUsers = JSON.parse(raw);
+      if (!Array.isArray(savedUsers)) savedUsers = [];
     } catch (e) {
-      // If JSON.parse fails, clear the keys so the app doesn't crash on every reload.
-      console.error("Invalid data in savedUsers/storedUsers:", e);
-      localStorage.removeItem("savedUsers");
-      localStorage.removeItem("storedUsers");
-      storedUsers = [];
+      console.error("Invalid data in savedUsers:", e);
+      localStorage.removeItem(STORAGE_KEY);
+      savedUsers = [];
     }
 
-    // =============================================================================
-    // 3. DOM ELEMENT REFERENCES
-    // =============================================================================
-    // Cache the elements we need to read from or write to so we don't query the DOM
-    // repeatedly on every render.
+    // =========================================================================
+    // 3. DOM REFERENCES
+    // =========================================================================
+    const listView = document.getElementById("listView");
+    const detailView = document.getElementById("detailView");
+    const detailContent = document.getElementById("detailContent");
     const grid = document.getElementById("userGrid");
-    const searchInput = document.getElementById("search");
-    const statusFilter = document.getElementById("statusFilter");
-    const roleFilter = document.getElementById("roleFilter");
     const stats = document.getElementById("stats");
+    const searchInput = document.getElementById("search");
+    const backBtn = document.getElementById("backBtn");
+    const subtitle = document.getElementById("subtitle");
 
-    // =============================================================================
-    // 4. SVG ICONS
-    // =============================================================================
-    // These strings are inlined into the cards. Keeping them in one object makes the
-    // render function easier to read and avoids repeating SVG markup.
-    const icons = {
-      mail: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>`,
-      building: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6"/></svg>`,
-      mapPin: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
-      phone: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`,
-      calendar: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
-      searchEmpty: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+    // =========================================================================
+    // 4. HELPERS
+    // =========================================================================
+    const escapeHtml = (value) =>
+      String(value ?? "").replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[c]));
+
+    const initials = (name) =>
+      String(name || "?").trim().split(/\s+/).slice(0, 2).map((p) => p[0]).join("").toUpperCase();
+
+    const formatDate = (value) => {
+      const d = new Date(value);
+      if (isNaN(d)) return escapeHtml(value);
+      return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
     };
 
-    // =============================================================================
-    // 5. HELPER FUNCTIONS
-    // =============================================================================
+    const findUser = (id) => savedUsers.find((u) => String(u.userId) === String(id));
 
-    // Build the role dropdown from the unique roles found in the stored users.
-    function populateRoleFilter() {
-      const roles = [...new Set(storedUsers.map((u) => u.role))].sort();
-      roleFilter.innerHTML = '<option value="">All roles</option>' +
-        roles.map((role) => `<option value="${role}">${role}</option>`).join("");
-    }
+    // =========================================================================
+    // 5. RENDER: LIST
+    // =========================================================================
+    function renderList() {
+      const term = searchInput.value.trim().toLowerCase();
+      const filtered = savedUsers.filter((u) =>
+        !term ||
+        String(u.Name || "").toLowerCase().includes(term) ||
+        String(u.Email || "").toLowerCase().includes(term)
+      );
 
-    // Create a two-letter avatar from the user's first and last name.
-    function getInitials(first, last) {
-      return `${first[0]}${last[0]}`.toUpperCase();
-    }
-
-    // Convert an ISO date string into a human-readable local date.
-    function formatDate(dateString) {
-      const date = new Date(dateString);
-      return date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
-    }
-
-    // Count users by status and render the summary pills.
-    function renderStats(list) {
-      const active = list.filter((u) => u.status === "active").length;
-      const pending = list.filter((u) => u.status === "pending").length;
-      const inactive = list.filter((u) => u.status === "inactive").length;
+      const totalTx = savedUsers.reduce((sum, u) => sum + (u.Transactions?.length || 0), 0);
       stats.innerHTML = `
-        <div class="stat-pill">Total users: <strong>${list.length}</strong></div>
-        <div class="stat-pill">Active: <strong>${active}</strong></div>
-        <div class="stat-pill">Pending: <strong>${pending}</strong></div>
-        <div class="stat-pill">Inactive: <strong>${inactive}</strong></div>
+        <span class="stat-pill">Users <strong>${savedUsers.length}</strong></span>
+        <span class="stat-pill">Showing <strong>${filtered.length}</strong></span>
+        <span class="stat-pill">Transactions <strong>${totalTx}</strong></span>
       `;
-    }
 
-    // =============================================================================
-    // 6. RENDER THE USER CARDS
-    // =============================================================================
-    // Each card shows only the avatar, name, and position by default. The full
-    // details list is hidden and is toggled open when the card is clicked.
-    function renderUsers(list) {
-      renderStats(list);
-
-      // If the filtered list is empty, show a friendly empty state instead of cards.
-      if (list.length === 0) {
-        grid.innerHTML = `
-          <div class="empty" style="grid-column: 1 / -1;">
-            ${icons.searchEmpty}
-            <h3>No users found</h3>
-            <p>Try adjusting your search or filters.</p>
-          </div>
-        `;
+      if (!filtered.length) {
+        grid.innerHTML = `<div class="empty">No users found.</div>`;
         return;
       }
 
-      // Map each user to a card string, then join them into one HTML chunk.
-      grid.innerHTML = list.map((user) => {
-        // Pick the correct status class and a capitalized label.
-        const statusClass = user.status === "active" ? "active" : user.status === "inactive" ? "inactive" : "pending";
-        const displayStatus = user.status.charAt(0).toUpperCase() + user.status.slice(1);
-
-        return `
-          <article class="card" tabindex="0" data-id="${user.id}">
-            <div class="card-header">
-              <div class="avatar" aria-hidden="true">${getInitials(user.firstName, user.lastName)}</div>
-              <div>
-                <div class="name">${user.firstName} ${user.lastName}</div>
-                <div class="position">${user.role}</div>
-                <div class="hint">Click to view details</div>
-              </div>
+      grid.innerHTML = filtered.map((u) => `
+        <button class="card" type="button" data-id="${escapeHtml(u.userId)}">
+          <div class="card-header">
+            <div class="avatar">${escapeHtml(initials(u.name))}</div>
+            <div>
+              <div class="name">${escapeHtml(u.name)}</div>
+              <div class="email">${escapeHtml(u.email)}</div>
+              <div class="hint">${u.Transactions?.length || 0} transaction(s) — click to view</div>
             </div>
-            <!-- Details are hidden initially and revealed with the 'open' class -->
-            <ul class="details" aria-hidden="true">
-              <li class="detail">
-                <span class="detail-label">${icons.mail} Email</span>
-                <span class="detail-value">${user.email}</span>
-              </li>
-              <li class="detail">
-                <span class="detail-label">${icons.building} Department</span>
-                <span class="detail-value">${user.department}</span>
-              </li>
-              <li class="detail">
-                <span class="detail-label">${icons.mapPin} Location</span>
-                <span class="detail-value">${user.location}</span>
-              </li>
-              <li class="detail">
-                <span class="detail-label">${icons.phone} Phone</span>
-                <span class="detail-value">${user.phone}</span>
-              </li>
-              <li class="detail">
-                <span class="detail-label">${icons.calendar} Joined</span>
-                <span class="detail-value">${formatDate(user.joined)}</span>
-              </li>
-              <li class="detail">
-                <span class="detail-label">Status</span>
-                <span class="status ${statusClass}">
-                  <span class="status-dot"></span>
-                  ${displayStatus}
-                </span>
-              </li>
-            </ul>
-          </article>
-        `;
-      }).join("");
-
-      // Attach click and keyboard handlers to every card after rendering.
-      // We use event delegation to keep the listener count small and avoid leaks.
-      attachCardHandlers();
+          </div>
+        </button>
+      `).join("");
     }
 
-    // =============================================================================
-    // 7. TOGGLE DETAILS ON CARD CLICK
-    // =============================================================================
-    // A single listener on the grid handles clicks on any card. It finds the
-    // closest card ancestor, then toggles the hidden details list inside it.
-    function attachCardHandlers() {
-      grid.addEventListener("click", function (event) {
-        const card = event.target.closest(".card");
-        if (!card) return;
-        toggleCard(card);
-      });
-
-      // Also allow keyboard activation (Enter / Space) for accessibility.
-      grid.addEventListener("keydown", function (event) {
-        if (event.key !== "Enter" && event.key !== " ") return;
-        const card = event.target.closest(".card");
-        if (!card) return;
-        event.preventDefault();
-        toggleCard(card);
-      });
+    // =========================================================================
+    // 6. RENDER: SINGLE USER DETAIL (list is hidden while this shows)
+    // =========================================================================
+    function renderDetail(user) {
+      const txs = Array.isArray(user.transactions) ? user.transactions : [];
+      detailContent.innerHTML = `
+        <div class="detail-head">
+          <div class="avatar lg">${escapeHtml(initials(user.name))}</div>
+          <div>
+            <div class="name">${escapeHtml(user.name)}</div>
+            <div class="email">${escapeHtml(user.email)}</div>
+            <div class="meta">User ID: ${escapeHtml(user.userId)}</div>
+          </div>
+        </div>
+        <h2 class="section-title">Transactions (${txs.length})</h2>
+        ${
+          txs.length
+            ? `<ul class="tx-list">${txs.map((t) => `
+                <li class="tx">
+                  <div class="tx-top">
+                    <span class="tx-title">${escapeHtml(t.title)}</span>
+                    <span class="tx-date">${formatDate(t.date)}</span>
+                  </div>
+                  <p class="tx-message">${escapeHtml(t.message)}</p>
+                </li>`).join("")}</ul>`
+            : `<div class="empty">No transactions for this user.</div>`
+        }
+      `;
     }
 
-    // Show or hide the details list inside a single card and update ARIA attributes.
-    function toggleCard(card) {
-      const details = card.querySelector(".details");
-      const isOpen = details.classList.contains("open");
-
-      // If it's open, close it; otherwise open it.
-      details.classList.toggle("open", !isOpen);
-      // aria-hidden reflects whether the details are currently visible.
-      details.setAttribute("aria-hidden", String(!isOpen));
-      // aria-expanded tells screen readers the card's expanded state.
-      card.setAttribute("aria-expanded", String(!isOpen));
+    // =========================================================================
+    // 7. NAVIGATION (hash-based, back/forward and refresh all work)
+    // =========================================================================
+    function showList() {
+      detailView.classList.add("hidden");
+      listView.classList.remove("hidden");
+      subtitle.textContent = "Click a user to see only that user's details.";
+      document.title = "Users Directory";
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    // =============================================================================
-    // 8. FILTERING
-    // =============================================================================
-    // Read the three control values and return only the users that match all of them.
-    function filterUsers() {
-      const query = searchInput.value.toLowerCase().trim();
-      const status = statusFilter.value;
-      const role = roleFilter.value;
-
-      const filtered = storedUsers.filter((user) => {
-        const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-        // Search across name, email, role, department, and location.
-        const matchesSearch =
-          !query ||
-          fullName.includes(query) ||
-          user.email.toLowerCase().includes(query) ||
-          user.role.toLowerCase().includes(query) ||
-          user.department.toLowerCase().includes(query) ||
-          user.location.toLowerCase().includes(query);
-        // Match exact status and role if a filter is selected.
-        const matchesStatus = !status || user.status === status;
-        const matchesRole = !role || user.role === role;
-        return matchesSearch && matchesStatus && matchesRole;
-      });
-
-      renderUsers(filtered);
+    function showDetail(user) {
+      renderDetail(user);
+      listView.classList.add("hidden");
+      detailView.classList.remove("hidden");
+      subtitle.textContent = "Viewing a single user.";
+      document.title = `${user.name} — Users Directory`;
+      backBtn.focus();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    // =============================================================================
-    // 9. INITIALIZE
-    // =============================================================================
-    // Listen for user input on the controls and render the initial list.
-    searchInput.addEventListener("input", filterUsers);
-    statusFilter.addEventListener("change", filterUsers);
-    roleFilter.addEventListener("change", filterUsers);
+    function route() {
+      const match = window.location.hash.match(/^#\/user\/(.+)$/);
+      if (match) {
+        const user = findUser(decodeURIComponent(match[1]));
+        if (user) { showDetail(user); return; }
+        window.location.hash = ""; // unknown id -> back to list
+      }
+      showList();
+    }
 
-    populateRoleFilter();
-    renderUsers(storedUsers);
+    // Card clicks -> navigate to the user's detail route
+    grid.addEventListener("click", (e) => {
+      const card = e.target.closest(".card");
+      if (!card) return;
+      window.location.hash = `#/user/${encodeURIComponent(card.dataset.id)}`;
+    });
+
+    // Back button uses real history so browser back stays in sync
+    backBtn.addEventListener("click", () => {
+      if (window.history.length > 1) window.history.back();
+      else window.location.hash = "";
+    });
+
+    // Escape key closes the detail view
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !detailView.classList.contains("hidden")) backBtn.click();
+    });
+
+    searchInput.addEventListener("input", renderList);
+    window.addEventListener("hashchange", route);
+
+    // Initial paint
+    renderList();
+    route();
   </script>
 </body>
 </html>
