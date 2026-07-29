@@ -329,27 +329,106 @@
 
   <script>
     // =============================================================================
-    // 1. LOAD USERS FROM LOCALSTORAGE
+    // 1. DEMO USER DATA — saved automatically when the page is first opened
     // =============================================================================
-    // The app expects an array of user objects saved under the key "storedUsers".
-    // If nothing is stored yet, we fall back to an empty array so the page still
-    // renders (with an empty-state message).
+    // This array is the demo data. If localStorage already has "savedUsers" or
+    // "storedUsers", the existing data is used instead. On a fresh visit, this
+    // demo data is saved under the key "savedUsers" so the page never shows
+    // "No users found" on first load.
+    const demoUsers = [
+      {
+        id: "1",
+        firstName: "Adeola",
+        lastName: "Ogunlesi",
+        role: "Product Manager",
+        email: "adeola.ogunlesi@example.com",
+        department: "Product",
+        location: "Lagos, Nigeria",
+        phone: "+234 803 123 4567",
+        joined: "2023-01-15",
+        status: "active"
+      },
+      {
+        id: "2",
+        firstName: "Kwame",
+        lastName: "Asante",
+        role: "Frontend Engineer",
+        email: "kwame.asante@example.com",
+        department: "Engineering",
+        location: "Accra, Ghana",
+        phone: "+233 24 567 8901",
+        joined: "2023-03-22",
+        status: "active"
+      },
+      {
+        id: "3",
+        firstName: "Chinwe",
+        lastName: "Nwosu",
+        role: "UX Designer",
+        email: "chinwe.nwosu@example.com",
+        department: "Design",
+        location: "Abuja, Nigeria",
+        phone: "+234 705 987 6543",
+        joined: "2023-06-10",
+        status: "pending"
+      },
+      {
+        id: "4",
+        firstName: "Juma",
+        lastName: "Mwangi",
+        role: "DevOps Engineer",
+        email: "juma.mwangi@example.com",
+        department: "Engineering",
+        location: "Nairobi, Kenya",
+        phone: "+254 712 345 678",
+        joined: "2022-11-05",
+        status: "inactive"
+      },
+      {
+        id: "5",
+        firstName: "Amara",
+        lastName: "Diallo",
+        role: "Marketing Lead",
+        email: "amara.diallo@example.com",
+        department: "Marketing",
+        location: "Dakar, Senegal",
+        phone: "+221 77 123 4567",
+        joined: "2023-08-30",
+        status: "active"
+      }
+    ];
+
+    // Save the demo users to localStorage under the key "savedUsers" if the key
+    // does not already exist. This way, the first time the page opens it has data
+    // to display, and any later edits you make in localStorage will persist.
+    if (!localStorage.getItem("savedUsers") && !localStorage.getItem("storedUsers")) {
+      localStorage.setItem("savedUsers", JSON.stringify(demoUsers));
+    }
+
+    // =============================================================================
+    // 2. LOAD USERS FROM LOCALSTORAGE
+    // =============================================================================
+    // The app first checks for the key "savedUsers". If that is missing, it falls
+    // back to the older key "storedUsers". If neither key exists, it uses an
+    // empty array so the page still renders with an empty-state message.
     let storedUsers = [];
     try {
-      const raw = localStorage.getItem("storedUsers");
+      // Try the primary key first, then the fallback key.
+      const raw = localStorage.getItem("savedUsers") || localStorage.getItem("storedUsers");
       // localStorage only stores strings, so we parse the JSON back into an array.
       if (raw) storedUsers = JSON.parse(raw);
       // Guard against non-array values — if someone saved something else, reset it.
       if (!Array.isArray(storedUsers)) storedUsers = [];
     } catch (e) {
-      // If JSON.parse fails, clear the key so the app doesn't crash on every reload.
-      console.error("Invalid data in storedUsers:", e);
+      // If JSON.parse fails, clear the keys so the app doesn't crash on every reload.
+      console.error("Invalid data in savedUsers/storedUsers:", e);
+      localStorage.removeItem("savedUsers");
       localStorage.removeItem("storedUsers");
       storedUsers = [];
     }
 
     // =============================================================================
-    // 2. DOM ELEMENT REFERENCES
+    // 3. DOM ELEMENT REFERENCES
     // =============================================================================
     // Cache the elements we need to read from or write to so we don't query the DOM
     // repeatedly on every render.
@@ -360,7 +439,7 @@
     const stats = document.getElementById("stats");
 
     // =============================================================================
-    // 3. SVG ICONS
+    // 4. SVG ICONS
     // =============================================================================
     // These strings are inlined into the cards. Keeping them in one object makes the
     // render function easier to read and avoids repeating SVG markup.
@@ -374,7 +453,7 @@
     };
 
     // =============================================================================
-    // 4. HELPER FUNCTIONS
+    // 5. HELPER FUNCTIONS
     // =============================================================================
 
     // Build the role dropdown from the unique roles found in the stored users.
@@ -409,7 +488,7 @@
     }
 
     // =============================================================================
-    // 5. RENDER THE USER CARDS
+    // 6. RENDER THE USER CARDS
     // =============================================================================
     // Each card shows only the avatar, name, and position by default. The full
     // details list is hidden and is toggled open when the card is clicked.
@@ -484,7 +563,7 @@
     }
 
     // =============================================================================
-    // 6. TOGGLE DETAILS ON CARD CLICK
+    // 7. TOGGLE DETAILS ON CARD CLICK
     // =============================================================================
     // A single listener on the grid handles clicks on any card. It finds the
     // closest card ancestor, then toggles the hidden details list inside it.
@@ -519,7 +598,7 @@
     }
 
     // =============================================================================
-    // 7. FILTERING
+    // 8. FILTERING
     // =============================================================================
     // Read the three control values and return only the users that match all of them.
     function filterUsers() {
@@ -547,7 +626,7 @@
     }
 
     // =============================================================================
-    // 8. INITIALIZE
+    // 9. INITIALIZE
     // =============================================================================
     // Listen for user input on the controls and render the initial list.
     searchInput.addEventListener("input", filterUsers);
