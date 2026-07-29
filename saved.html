@@ -6,7 +6,7 @@
 <title>Saved Users — NovaTrade</title>
 <style>
   :root{
-    --bg:#0c1416; --surface:#131e21; --surface-2:#182629;
+    --bg:#0c1416; --surface:#131e21; --surface-2:#182629; --surface-3:#1e2d31;
     --fg:#eef6f2; --muted:#93a8a5; --primary:#4ef58f; --primary-dim:#2bd97a;
     --border:rgba(120,180,160,.18); --radius:14px;
   }
@@ -37,18 +37,20 @@
     border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
     transition:border-color .25s ease, transform .25s ease, box-shadow .25s ease;
   }
-  .user:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 12px 34px -18px var(--primary)}
-  .user.open{border-color:var(--primary)}
+  .user:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 12px 34px -18px rgba(78,245,143,.25)}
+  .user.open{border-color:var(--primary);box-shadow:0 12px 34px -18px rgba(78,245,143,.25)}
   .row{
     display:flex;align-items:center;gap:14px;width:100%;padding:15px 18px;
     background:none;border:0;color:inherit;font:inherit;cursor:pointer;text-align:left;
   }
   .avatar{
-    width:38px;height:38px;flex:none;border-radius:50%;display:grid;place-items:center;
-    font-weight:700;font-size:.85rem;color:#0c1416;
+    width:42px;height:42px;flex:none;border-radius:50%;display:grid;place-items:center;
+    font-weight:700;font-size:.9rem;color:#0c1416;
     background:linear-gradient(135deg,var(--primary),var(--primary-dim));
   }
-  .name{flex:1;font-weight:600;letter-spacing:-.01em}
+  .meta{flex:1;min-width:0}
+  .title{font-weight:600;letter-spacing:-.01em;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .subtitle{font-size:.82rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .chev{color:var(--muted);transition:transform .3s ease}
   .user.open .chev{transform:rotate(180deg);color:var(--primary)}
   .details{
@@ -56,29 +58,41 @@
     transition:max-height .45s cubic-bezier(.4,0,.2,1), opacity .3s ease;
     opacity:0;
   }
-  .user.open .details{max-height:900px;opacity:1}
+  .user.open .details{max-height:1200px;opacity:1}
   .details-inner{padding:2px 18px 18px;border-top:1px solid var(--border);margin-top:0}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;padding-top:14px}
-  .field{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding-top:14px}
+  .field{background:var(--surface-3);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
   .k{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:4px}
   .v{font-size:.92rem;word-break:break-word}
+  .v pre{margin:0;font-size:.82rem;color:var(--fg);white-space:pre-wrap;word-break:break-word}
+  .v ul{margin:0;padding-left:18px}
+  .v li{margin:3px 0}
   .empty{
     text-align:center;padding:50px 20px;border:1px dashed var(--border);
     border-radius:var(--radius);color:var(--muted);background:var(--surface)
   }
   .empty b{color:var(--fg)}
   code{background:var(--surface-2);padding:2px 6px;border-radius:6px;color:var(--primary);font-size:.85em}
+  .badge{
+    display:inline-block;padding:2px 7px;border-radius:6px;font-size:.7rem;font-weight:600;
+    background:rgba(78,245,143,.12);color:var(--primary);border:1px solid rgba(78,245,143,.25);
+    text-transform:uppercase;letter-spacing:.04em;
+  }
+  .type-null{color:var(--muted);font-style:italic}
+  .type-bool{color:var(--primary)}
+  .type-num{color:#7ee8ff}
+  .type-str{color:#f5f5f5}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <h1>Saved <span>Users</span></h1>
-    <p class="sub">Loaded from <code>localStorage.savedUsers</code> — click a User ID to reveal that user's details.</p>
+    <p class="sub">Loaded from <code>localStorage.savedUsers</code> — click a user card to reveal all details.</p>
   </header>
 
   <div class="toolbar">
-    <input type="search" id="search" placeholder="Search by User ID…" autocomplete="off" />
+    <input type="search" id="search" placeholder="Search by any detail…" autocomplete="off" />
   </div>
 
   <div class="list" id="list"></div>
@@ -96,7 +110,6 @@
       var data = JSON.parse(raw);
       if (Array.isArray(data)) return data;
       if (data && typeof data === 'object') {
-        // object map: { username: {...} }
         return Object.keys(data).map(function (k) {
           var v = data[k];
           return (v && typeof v === 'object') ? Object.assign({ username: k }, v) : { username: k, value: v };
@@ -108,57 +121,124 @@
     }
   }
 
-  var ID_KEYS = ['UserId','userId','userID','UserID','user_id','id','Id','ID'];
+  var NAME_KEYS = ['name','Name','fullName','full_name','FullName','username','Username','userName','email','Email','user_id','UserId','userId','userID','UserID','id','Id','ID'];
+  var SUBTITLE_KEYS = ['email','Email','user_id','UserId','userId','userID','UserID','id','Id','ID','phone','Phone'];
+  var SENSITIVE = /^(password|pass|pwd|confirmpassword|token|secret|apikey|api_key|privatekey)$/i;
 
-  function idKeyOf(u) {
-    for (var i = 0; i < ID_KEYS.length; i++) {
-      if (u && Object.prototype.hasOwnProperty.call(u, ID_KEYS[i])) return ID_KEYS[i];
+  function getValue(u, keys) {
+    for (var i = 0; i < keys.length; i++) {
+      if (u && Object.prototype.hasOwnProperty.call(u, keys[i])) {
+        var v = u[keys[i]];
+        if (v !== undefined && v !== null && v !== '') return { key: keys[i], value: v };
+      }
     }
     return null;
   }
 
-  function nameOf(u, i) {
-    var k = idKeyOf(u);
-    if (k && u[k] !== undefined && u[k] !== null && u[k] !== '') return String(u[k]);
-    return 'User ' + (i + 1);
+  function titleOf(u) {
+    var found = getValue(u, NAME_KEYS);
+    return found ? String(found.value) : 'Unknown User';
   }
 
-  function initials(n) {
-    var s = String(n).replace(/[^A-Za-z0-9]/g, '');
-    return (s.slice(-2) || '#').toUpperCase();
+  function subtitleOf(u) {
+    var found = getValue(u, SUBTITLE_KEYS);
+    if (!found) return null;
+    return label(found.key) + ': ' + String(found.value);
+  }
+
+  function initials(name) {
+    var s = String(name).trim();
+    var parts = s.split(/\s+/).filter(function (p) { return p.length > 0; });
+    if (parts.length > 1) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    return (s.slice(0, 2) || '#').toUpperCase();
   }
 
   function label(key) {
     return key.replace(/[_-]/g, ' ').replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
   }
 
-  function fmt(val) {
-    if (val === null || val === undefined || val === '') return '—';
-    if (typeof val === 'object') return JSON.stringify(val, null, 2);
-    if (typeof val === 'boolean') return val ? 'Yes' : 'No';
-    return String(val);
+  function typeClass(val) {
+    if (val === null || val === undefined) return 'type-null';
+    if (typeof val === 'boolean') return 'type-bool';
+    if (typeof val === 'number') return 'type-num';
+    return 'type-str';
   }
 
-  var SENSITIVE = /^(password|pass|pwd|confirmpassword|token)$/i;
+  function formatValue(val) {
+    if (val === null || val === undefined) return '<span class="type-null">—</span>';
+    if (typeof val === 'boolean') return '<span class="type-bool">' + (val ? 'Yes' : 'No') + '</span>';
+    if (typeof val === 'number') return '<span class="type-num">' + val + '</span>';
+    if (typeof val === 'string') return '<span class="type-str">' + escapeHtml(val) + '</span>';
+    return null;
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function renderField(key, val) {
+    if (SENSITIVE.test(key)) return '';
+    var html = '<div class="field"><span class="k">' + escapeHtml(label(key)) + '</span><div class="v">';
+    if (Array.isArray(val)) {
+      if (val.length === 0) {
+        html += '<span class="type-null">Empty list</span>';
+      } else {
+        html += '<ul>';
+        val.forEach(function (item) {
+          html += '<li>' + formatValue(item);
+          if (typeof item === 'object' && item !== null) {
+            html += '<br><pre>' + escapeHtml(JSON.stringify(item, null, 2)) + '</pre>';
+          }
+          html += '</li>';
+        });
+        html += '</ul>';
+      }
+    } else if (typeof val === 'object' && val !== null) {
+      html += '<pre>' + escapeHtml(JSON.stringify(val, null, 2)) + '</pre>';
+    } else {
+      html += formatValue(val);
+    }
+    html += '</div></div>';
+    return html;
+  }
+
+  function matches(u, q) {
+    if (!q) return true;
+    q = q.toLowerCase();
+    return Object.keys(u).some(function (key) {
+      if (SENSITIVE.test(key)) return false;
+      var val = u[key];
+      if (val === null || val === undefined) return false;
+      var s = typeof val === 'object' ? JSON.stringify(val) : String(val);
+      return s.toLowerCase().indexOf(q) > -1;
+    });
+  }
 
   var users = loadUsers();
 
   function render(filter) {
     var q = (filter || '').toLowerCase();
-    var shown = users.filter(function (u, i) { return nameOf(u, i).toLowerCase().indexOf(q) > -1; });
+    var shown = users.filter(function (u) { return matches(u, q); });
 
     if (!users.length) {
       list.innerHTML = '<div class="empty"><b>No saved users found.</b><br>Nothing stored under <code>savedUsers</code> in this browser.</div>';
       return;
     }
     if (!shown.length) {
-      list.innerHTML = '<div class="empty">No users match <b>' + (filter || '') + '</b>.</div>';
+      list.innerHTML = '<div class="empty">No users match <b>' + escapeHtml(filter || '') + '</b>.</div>';
       return;
     }
 
     list.innerHTML = '';
     shown.forEach(function (u, idx) {
-      var name = nameOf(u, users.indexOf(u));
+      var title = titleOf(u);
+      var sub = subtitleOf(u);
+
       var card = document.createElement('div');
       card.className = 'user';
 
@@ -166,37 +246,32 @@
       btn.className = 'row';
       btn.type = 'button';
       btn.setAttribute('aria-expanded', 'false');
+
+      var meta = '<div class="meta"><div class="title">' + escapeHtml(title) + '</div>';
+      if (sub) meta += '<div class="subtitle">' + escapeHtml(sub) + '</div>';
+      meta += '</div>';
+
       btn.innerHTML =
-        '<span class="avatar">' + initials(name) + '</span>' +
-        '<span class="name"></span>' +
+        '<span class="avatar">' + escapeHtml(initials(title)) + '</span>' +
+        meta +
         '<span class="chev">&#9662;</span>';
-      btn.querySelector('.name').textContent = name;
 
       var details = document.createElement('div');
       details.className = 'details';
       var inner = document.createElement('div');
       inner.className = 'details-inner';
+
       var grid = document.createElement('div');
       grid.className = 'grid';
 
-      var idKey = idKeyOf(u);
       Object.keys(u).forEach(function (key) {
         if (SENSITIVE.test(key)) return;
-        if (key === idKey) return;
-        var f = document.createElement('div');
-        f.className = 'field';
-        var k = document.createElement('span');
-        k.className = 'k';
-        k.textContent = label(key);
-        var v = document.createElement('div');
-        v.className = 'v';
-        v.textContent = fmt(u[key]);
-        f.appendChild(k); f.appendChild(v);
-        grid.appendChild(f);
+        var fieldHtml = renderField(key, u[key]);
+        if (fieldHtml) grid.innerHTML += fieldHtml;
       });
 
       if (!grid.children.length) {
-        grid.innerHTML = '<div class="field"><div class="v">No additional details.</div></div>';
+        grid.innerHTML = '<div class="field"><span class="k">Info</span><div class="v">No additional details.</div></div>';
       }
 
       inner.appendChild(grid);
