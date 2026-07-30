@@ -1,303 +1,499 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Saved Users — NovaTrade</title>
-<style>
-  :root{
-    --bg:#0c1416; --surface:#131e21; --surface-2:#182629; --surface-3:#1e2d31;
-    --fg:#eef6f2; --muted:#93a8a5; --primary:#4ef58f; --primary-dim:#2bd97a;
-    --border:rgba(120,180,160,.18); --radius:14px;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; min-height:100vh; padding:40px 18px;
-    background:
-      radial-gradient(ellipse at top, rgba(78,245,143,.13), transparent 60%),
-      var(--bg);
-    color:var(--fg);
-    font-family:ui-sans-serif,system-ui,-apple-system,"Inter",sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:760px;margin:0 auto}
-  header{margin-bottom:26px}
-  h1{margin:0 0 6px;font-size:1.9rem;letter-spacing:-.02em}
-  h1 span{background:linear-gradient(135deg,var(--primary),#a6ffcf);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .sub{margin:0;color:var(--muted);font-size:.92rem}
-  .toolbar{display:flex;gap:10px;margin:18px 0}
-  input[type=search]{
-    flex:1;padding:11px 14px;border-radius:10px;background:var(--surface-2);
-    border:1px solid var(--border);color:var(--fg);font-size:.92rem;outline:none;
-  }
-  input[type=search]:focus{border-color:var(--primary)}
-  .list{display:flex;flex-direction:column;gap:10px}
-  .user{
-    background:linear-gradient(180deg,var(--surface-2),var(--surface));
-    border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
-    transition:border-color .25s ease, transform .25s ease, box-shadow .25s ease;
-  }
-  .user:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 12px 34px -18px rgba(78,245,143,.25)}
-  .user.open{border-color:var(--primary);box-shadow:0 12px 34px -18px rgba(78,245,143,.25)}
-  .row{
-    display:flex;align-items:center;gap:14px;width:100%;padding:15px 18px;
-    background:none;border:0;color:inherit;font:inherit;cursor:pointer;text-align:left;
-  }
-  .avatar{
-    width:42px;height:42px;flex:none;border-radius:50%;display:grid;place-items:center;
-    font-weight:700;font-size:.9rem;color:#0c1416;
-    background:linear-gradient(135deg,var(--primary),var(--primary-dim));
-  }
-  .meta{flex:1;min-width:0}
-  .title{font-weight:600;letter-spacing:-.01em;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .subtitle{font-size:.82rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .chev{color:var(--muted);transition:transform .3s ease}
-  .user.open .chev{transform:rotate(180deg);color:var(--primary)}
-  .details{
-    max-height:0;overflow:hidden;
-    transition:max-height .45s cubic-bezier(.4,0,.2,1), opacity .3s ease;
-    opacity:0;
-  }
-  .user.open .details{max-height:1200px;opacity:1}
-  .details-inner{padding:2px 18px 18px;border-top:1px solid var(--border);margin-top:0}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding-top:14px}
-  .field{background:var(--surface-3);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
-  .k{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:4px}
-  .v{font-size:.92rem;word-break:break-word}
-  .v pre{margin:0;font-size:.82rem;color:var(--fg);white-space:pre-wrap;word-break:break-word}
-  .v ul{margin:0;padding-left:18px}
-  .v li{margin:3px 0}
-  .empty{
-    text-align:center;padding:50px 20px;border:1px dashed var(--border);
-    border-radius:var(--radius);color:var(--muted);background:var(--surface)
-  }
-  .empty b{color:var(--fg)}
-  code{background:var(--surface-2);padding:2px 6px;border-radius:6px;color:var(--primary);font-size:.85em}
-  .badge{
-    display:inline-block;padding:2px 7px;border-radius:6px;font-size:.7rem;font-weight:600;
-    background:rgba(78,245,143,.12);color:var(--primary);border:1px solid rgba(78,245,143,.25);
-    text-transform:uppercase;letter-spacing:.04em;
-  }
-  .type-null{color:var(--muted);font-style:italic}
-  .type-bool{color:var(--primary)}
-  .type-num{color:#7ee8ff}
-  .type-str{color:#f5f5f5}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Users Directory</title>
+  <style>
+    :root {
+      --background: #0a0b14;
+      --surface: #11121f;
+      --surface-elevated: #181a2a;
+      --border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f4f4f5;
+      --text-secondary: #a1a1aa;
+      --accent: oklch(0.85 0.22 145);
+      --accent-hover: oklch(0.78 0.22 145);
+      --ring: oklch(0.85 0.22 145 / 0.35);
+      --radius: 0.75rem;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      --success: #22c55e;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at 20% 30%, #1a1d33 0%, transparent 40%),
+                  radial-gradient(circle at 80% 10%, #252a45 0%, transparent 35%),
+                  var(--background);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    header { text-align: center; margin-bottom: 2rem; }
+    header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; }
+    header p { color: var(--text-secondary); margin-top: 0.5rem; }
+
+    .controls {
+      display: flex; flex-wrap: wrap; gap: 0.75rem;
+      justify-content: center; margin-bottom: 1.5rem;
+    }
+
+    .controls input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 0.6rem 0.9rem;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      outline: none;
+      min-width: 280px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .controls input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--ring); }
+
+    .stats { display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
+
+    .stat-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.45rem 1rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    .stat-pill strong { color: var(--text-primary); }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+      cursor: pointer;
+      outline: none;
+      text-align: left;
+      width: 100%;
+      font: inherit;
+      color: inherit;
+    }
+
+    .card:hover, .card:focus-visible {
+      transform: translateY(-3px);
+      border-color: oklch(0.85 0.22 145 / 0.45);
+      background: var(--surface-elevated);
+    }
+    .card:focus-visible { box-shadow: 0 0 0 3px var(--ring); }
+
+    .card-header { display: flex; align-items: center; gap: 0.875rem; }
+
+    .avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: linear-gradient(135deg, oklch(0.85 0.22 145), oklch(0.65 0.2 150));
+      display: grid; place-items: center;
+      font-weight: 700; font-size: 1.1rem; color: #06210f; flex-shrink: 0;
+    }
+    .avatar.lg { width: 64px; height: 64px; font-size: 1.4rem; }
+
+    .name { font-size: 1.05rem; font-weight: 600; line-height: 1.2; }
+    .email { font-size: 0.8rem; color: var(--accent); margin-top: 0.2rem; word-break: break-all; }
+    .hint { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem; }
+
+    /* ---------- Detail view ---------- */
+    .detail-view {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+    }
+
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius);
+      font-size: 0.9rem; cursor: pointer;
+      margin-bottom: 1.25rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .back-btn:hover { border-color: var(--accent); background: #1f2236; }
+    .back-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--ring); }
+
+    .detail-head { display: flex; align-items: center; gap: 1rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
+    .detail-head .name { font-size: 1.35rem; }
+    .meta { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem; }
+
+    .section-title {
+      margin: 1.5rem 0 0.75rem;
+      font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    .tx-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .tx {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+    }
+    .tx-top { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+    .tx-title { font-weight: 600; font-size: 0.98rem; }
+    .tx-date { font-size: 0.78rem; color: var(--text-secondary); white-space: nowrap; }
+    .tx-message { margin-top: 0.35rem; font-size: 0.88rem; color: var(--text-secondary); }
+
+    .user-form { margin-top: 1.5rem; display: grid; gap: 0.9rem; }
+    .field { display: grid; gap: 0.35rem; }
+    .field label { font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); }
+    .field input, .field textarea {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 0.6rem 0.85rem;
+      border-radius: var(--radius);
+      font: inherit; font-size: 0.95rem; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field textarea { min-height: 90px; resize: vertical; }
+    .field input:focus, .field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--ring); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+    .submit-btn {
+      justify-self: start;
+      background: var(--accent); color: #06210f; border: none;
+      padding: 0.65rem 1.2rem; border-radius: var(--radius);
+      font: inherit; font-weight: 600; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .submit-btn:hover { background: var(--accent-hover); }
+    .submit-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--ring); }
+    .form-status { font-size: 0.85rem; color: var(--success); min-height: 1.2em; }
+
+    .empty { text-align: center; padding: 3rem 1rem; color: var(--text-secondary); }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 640px) {
+      header h1 { font-size: 1.5rem; }
+      .controls input { min-width: 100%; }
+      .grid { grid-template-columns: 1fr; }
+      .tx-top { flex-direction: column; gap: 0.15rem; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>Saved <span>Users</span></h1>
-    <p class="sub">Loaded from <code>localStorage.savedUsers</code> — click a user card to reveal all details.</p>
-  </header>
+  <div class="container">
+    <header>
+      <h1>Users Directory</h1>
+      <p id="subtitle">Click a user to see only that user's details.</p>
+    </header>
 
-  <div class="toolbar">
-    <input type="search" id="search" placeholder="Search by any detail…" autocomplete="off" />
+    <!-- LIST VIEW -->
+    <section id="listView">
+      <div class="controls">
+        <input type="text" id="search" placeholder="Search by name or email..." aria-label="Search users" />
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="grid" id="userGrid"></div>
+    </section>
+
+    <!-- DETAIL VIEW (hidden until a user is clicked) -->
+    <section id="detailView" class="hidden">
+      <button class="back-btn" id="backBtn" type="button">&larr; Back to all users</button>
+      <div class="detail-view" id="detailContent"></div>
+    </section>
   </div>
 
-  <div class="list" id="list"></div>
-</div>
+  <script>
+    // =========================================================================
+    // 1. DEMO DATA — savedUsers: userId, name, email, transactions[]
+    //    Each transaction: { title, date, message }
+    // =========================================================================
+    const demoUsers = [
+      {
+        userId: "1",
+        name: "Adeola Ogunlesi",
+        email: "adeola.ogunlesi@example.com",
+        transactions: [
+          { title: "Wallet Top-up", date: "2024-01-12", message: "Added ₦50,000 via bank transfer." },
+          { title: "Subscription", date: "2024-02-01", message: "Monthly Pro plan renewed successfully." },
+          { title: "Refund", date: "2024-02-18", message: "Refund issued for duplicate charge." }
+        ]
+      },
+      {
+        userId: "2",
+        name: "Kwame Asante",
+        email: "kwame.asante@example.com",
+        transactions: [
+          { title: "Payout", date: "2024-03-04", message: "Weekly payout sent to GTBank ****2231." },
+          { title: "Wallet Top-up", date: "2024-03-22", message: "Added ₵1,200 via mobile money." }
+        ]
+      },
+      {
+        userId: "3",
+        name: "Chinwe Nwosu",
+        email: "chinwe.nwosu@example.com",
+        transactions: [
+          { title: "Invoice Paid", date: "2024-04-09", message: "Invoice #INV-1043 marked as paid." },
+          { title: "Card Charge", date: "2024-04-15", message: "Design tool licence billed to Visa ****4417." },
+          { title: "Withdrawal", date: "2024-05-02", message: "Withdrew ₦120,000 to savings account." }
+        ]
+      },
+      {
+        userId: "4",
+        name: "Juma Mwangi",
+        email: "juma.mwangi@example.com",
+        transactions: [
+          { title: "Wallet Top-up", date: "2024-05-11", message: "Added KSh 15,000 via M-Pesa." }
+        ]
+      },
+      {
+        userId: "5",
+        name: "Amara Diallo",
+        email: "amara.diallo@example.com",
+        transactions: [
+          { title: "Ad Spend", date: "2024-06-01", message: "Campaign budget charged for June." },
+          { title: "Refund", date: "2024-06-14", message: "Partial refund for cancelled campaign." },
+          { title: "Payout", date: "2024-06-28", message: "Affiliate payout processed." }
+        ]
+      }
+    ];
 
-<script>
-(function () {
-  var list = document.getElementById('list');
-  var search = document.getElementById('search');
+    const STORAGE_KEY = "savedUsers";
 
-  function loadUsers() {
+    // Seed localStorage on first visit so the page always has data.
+    (function seed() {
+      let existing = null;
+      try { existing = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { existing = null; }
+      const isValid = Array.isArray(existing) && existing.length > 0 && "userId" in existing[0];
+      if (!isValid) localStorage.setItem(STORAGE_KEY, JSON.stringify(demoUsers));
+    })();
+
+    // =========================================================================
+    // 2. LOAD FROM LOCALSTORAGE
+    // =========================================================================
+    let savedUsers = [];
     try {
-      var raw = localStorage.getItem('savedUsers');
-      if (!raw) return [];
-      var data = JSON.parse(raw);
-      if (Array.isArray(data)) return data;
-      if (data && typeof data === 'object') {
-        return Object.keys(data).map(function (k) {
-          var v = data[k];
-          return (v && typeof v === 'object') ? Object.assign({ username: k }, v) : { username: k, value: v };
-        });
-      }
-      return [];
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) savedUsers = JSON.parse(raw);
+      if (!Array.isArray(savedUsers)) savedUsers = [];
     } catch (e) {
-      return [];
-    }
-  }
-
-  var NAME_KEYS = ['name','Name','fullName','full_name','FullName','username','Username','userName','email','Email','user_id','UserId','userId','userID','UserID','id','Id','ID'];
-  var SUBTITLE_KEYS = ['email','Email','user_id','UserId','userId','userID','UserID','id','Id','ID','phone','Phone'];
-  var SENSITIVE = /^(password|pass|pwd|confirmpassword|token|secret|apikey|api_key|privatekey)$/i;
-
-  function getValue(u, keys) {
-    for (var i = 0; i < keys.length; i++) {
-      if (u && Object.prototype.hasOwnProperty.call(u, keys[i])) {
-        var v = u[keys[i]];
-        if (v !== undefined && v !== null && v !== '') return { key: keys[i], value: v };
-      }
-    }
-    return null;
-  }
-
-  function titleOf(u) {
-    var found = getValue(u, NAME_KEYS);
-    return found ? String(found.value) : 'Unknown User';
-  }
-
-  function subtitleOf(u) {
-    var found = getValue(u, SUBTITLE_KEYS);
-    if (!found) return null;
-    return label(found.key) + ': ' + String(found.value);
-  }
-
-  function initials(name) {
-    var s = String(name).trim();
-    var parts = s.split(/\s+/).filter(function (p) { return p.length > 0; });
-    if (parts.length > 1) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    return (s.slice(0, 2) || '#').toUpperCase();
-  }
-
-  function label(key) {
-    return key.replace(/[_-]/g, ' ').replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
-  }
-
-  function typeClass(val) {
-    if (val === null || val === undefined) return 'type-null';
-    if (typeof val === 'boolean') return 'type-bool';
-    if (typeof val === 'number') return 'type-num';
-    return 'type-str';
-  }
-
-  function formatValue(val) {
-    if (val === null || val === undefined) return '<span class="type-null">—</span>';
-    if (typeof val === 'boolean') return '<span class="type-bool">' + (val ? 'Yes' : 'No') + '</span>';
-    if (typeof val === 'number') return '<span class="type-num">' + val + '</span>';
-    if (typeof val === 'string') return '<span class="type-str">' + escapeHtml(val) + '</span>';
-    return null;
-  }
-
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
-  }
-
-  function renderField(key, val) {
-    if (SENSITIVE.test(key)) return '';
-    var html = '<div class="field"><span class="k">' + escapeHtml(label(key)) + '</span><div class="v">';
-    if (Array.isArray(val)) {
-      if (val.length === 0) {
-        html += '<span class="type-null">Empty list</span>';
-      } else {
-        html += '<ul>';
-        val.forEach(function (item) {
-          html += '<li>' + formatValue(item);
-          if (typeof item === 'object' && item !== null) {
-            html += '<br><pre>' + escapeHtml(JSON.stringify(item, null, 2)) + '</pre>';
-          }
-          html += '</li>';
-        });
-        html += '</ul>';
-      }
-    } else if (typeof val === 'object' && val !== null) {
-      html += '<pre>' + escapeHtml(JSON.stringify(val, null, 2)) + '</pre>';
-    } else {
-      html += formatValue(val);
-    }
-    html += '</div></div>';
-    return html;
-  }
-
-  function matches(u, q) {
-    if (!q) return true;
-    q = q.toLowerCase();
-    return Object.keys(u).some(function (key) {
-      if (SENSITIVE.test(key)) return false;
-      var val = u[key];
-      if (val === null || val === undefined) return false;
-      var s = typeof val === 'object' ? JSON.stringify(val) : String(val);
-      return s.toLowerCase().indexOf(q) > -1;
-    });
-  }
-
-  var users = loadUsers();
-
-  function render(filter) {
-    var q = (filter || '').toLowerCase();
-    var shown = users.filter(function (u) { return matches(u, q); });
-
-    if (!users.length) {
-      list.innerHTML = '<div class="empty"><b>No saved users found.</b><br>Nothing stored under <code>savedUsers</code> in this browser.</div>';
-      return;
-    }
-    if (!shown.length) {
-      list.innerHTML = '<div class="empty">No users match <b>' + escapeHtml(filter || '') + '</b>.</div>';
-      return;
+      console.error("Invalid data in savedUsers:", e);
+      localStorage.removeItem(STORAGE_KEY);
+      savedUsers = [];
     }
 
-    list.innerHTML = '';
-    shown.forEach(function (u, idx) {
-      var title = titleOf(u);
-      var sub = subtitleOf(u);
+    // =========================================================================
+    // 3. DOM REFERENCES
+    // =========================================================================
+    const listView = document.getElementById("listView");
+    const detailView = document.getElementById("detailView");
+    const detailContent = document.getElementById("detailContent");
+    const grid = document.getElementById("userGrid");
+    const stats = document.getElementById("stats");
+    const searchInput = document.getElementById("search");
+    const backBtn = document.getElementById("backBtn");
+    const subtitle = document.getElementById("subtitle");
 
-      var card = document.createElement('div');
-      card.className = 'user';
+    // =========================================================================
+    // 4. HELPERS
+    // =========================================================================
+    const escapeHtml = (value) =>
+      String(value ?? "").replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[c]));
 
-      var btn = document.createElement('button');
-      btn.className = 'row';
-      btn.type = 'button';
-      btn.setAttribute('aria-expanded', 'false');
+    const initials = (name) =>
+      String(name || "?").trim().split(/\s+/).slice(0, 2).map((p) => p[0]).join("").toUpperCase();
 
-      var meta = '<div class="meta"><div class="title">' + escapeHtml(title) + '</div>';
-      if (sub) meta += '<div class="subtitle">' + escapeHtml(sub) + '</div>';
-      meta += '</div>';
+    const formatDate = (value) => {
+      const d = new Date(value);
+      if (isNaN(d)) return escapeHtml(value);
+      return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+    };
 
-      btn.innerHTML =
-        '<span class="avatar">' + escapeHtml(initials(title)) + '</span>' +
-        meta +
-        '<span class="chev">&#9662;</span>';
+    const findUser = (id) => savedUsers.find((u) => String(u.userId) === String(id));
 
-      var details = document.createElement('div');
-      details.className = 'details';
-      var inner = document.createElement('div');
-      inner.className = 'details-inner';
+    // =========================================================================
+    // 5. RENDER: LIST
+    // =========================================================================
+    function renderList() {
+      const term = searchInput.value.trim().toLowerCase();
+      const filtered = savedUsers.filter((u) =>
+        !term ||
+        String(u.name || "").toLowerCase().includes(term) ||
+        String(u.email || "").toLowerCase().includes(term)
+      );
 
-      var grid = document.createElement('div');
-      grid.className = 'grid';
+      const totalTx = savedUsers.reduce((sum, u) => sum + (u.transactions?.length || 0), 0);
+      stats.innerHTML = `
+        <span class="stat-pill">Users <strong>${savedUsers.length}</strong></span>
+        <span class="stat-pill">Showing <strong>${filtered.length}</strong></span>
+        <span class="stat-pill">Transactions <strong>${totalTx}</strong></span>
+      `;
 
-      Object.keys(u).forEach(function (key) {
-        if (SENSITIVE.test(key)) return;
-        var fieldHtml = renderField(key, u[key]);
-        if (fieldHtml) grid.innerHTML += fieldHtml;
-      });
-
-      if (!grid.children.length) {
-        grid.innerHTML = '<div class="field"><span class="k">Info</span><div class="v">No additional details.</div></div>';
+      if (!filtered.length) {
+        grid.innerHTML = `<div class="empty">No users found.</div>`;
+        return;
       }
 
-      inner.appendChild(grid);
-      details.appendChild(inner);
-      card.appendChild(btn);
-      card.appendChild(details);
-      list.appendChild(card);
+      grid.innerHTML = filtered.map((u) => `
+        <button class="card" type="button" data-id="${escapeHtml(u.userId)}">
+          <div class="card-header">
+            <div class="avatar">${escapeHtml(initials(u.name))}</div>
+            <div>
+              <div class="name">${escapeHtml(u.name)}</div>
+              <div class="email">${escapeHtml(u.email)}</div>
+              <div class="hint">${u.transactions?.length || 0} transaction(s) — click to view</div>
+            </div>
+          </div>
+        </button>
+      `).join("");
+    }
 
-      btn.addEventListener('click', function () {
-        var isOpen = card.classList.contains('open');
-        // close others
-        Array.prototype.forEach.call(list.querySelectorAll('.user.open'), function (el) {
-          el.classList.remove('open');
-          el.querySelector('.row').setAttribute('aria-expanded', 'false');
-        });
-        if (!isOpen) {
-          card.classList.add('open');
-          btn.setAttribute('aria-expanded', 'true');
+    // =========================================================================
+    // 6. RENDER: SINGLE USER DETAIL (list is hidden while this shows)
+    // =========================================================================
+    function renderDetail(user) {
+      const txs = Array.isArray(user.transactions) ? user.transactions : [];
+      detailContent.innerHTML = `
+        <div class="detail-head">
+          <div class="avatar lg">${escapeHtml(initials(user.name))}</div>
+          <div>
+            <div class="name">${escapeHtml(user.name)}</div>
+            <div class="email">${escapeHtml(user.email)}</div>
+            <div class="meta">User ID: ${escapeHtml(user.userId)}</div>
+          </div>
+        </div>
+        <h2 class="section-title">Contact this user</h2>
+        <form class="user-form" id="userForm" novalidate>
+          <div class="form-row">
+            <div class="field">
+              <label for="formName">Name</label>
+              <input type="text" id="formName" name="name" value="${escapeHtml(user.name)}" />
+            </div>
+            <div class="field">
+              <label for="formEmail">Email</label>
+              <input type="email" id="formEmail" name="email" value="${escapeHtml(user.email)}" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="formTitle">Title</label>
+            <input type="text" id="formTitle" name="title" placeholder="Transaction title" />
+          </div>
+          <div class="field">
+            <label for="formMessage">Message</label>
+            <textarea id="formMessage" name="message" placeholder="Write a message..."></textarea>
+          </div>
+          <button class="submit-btn" type="submit">Send</button>
+          <p class="form-status" id="formStatus" role="status"></p>
+        </form>
+
+        <h2 class="section-title">Transactions (${txs.length})</h2>
+        ${
+          txs.length
+            ? `<ul class="tx-list">${txs.map((t) => `
+                <li class="tx">
+                  <div class="tx-top">
+                    <span class="tx-title">${escapeHtml(t.title)}</span>
+                    <span class="tx-date">${formatDate(t.date)}</span>
+                  </div>
+                  <p class="tx-message">${escapeHtml(t.message)}</p>
+                </li>`).join("")}</ul>`
+            : `<div class="empty">No transactions for this user.</div>`
         }
-      });
-    });
-  }
+      `;
 
-  search.addEventListener('input', function () { render(search.value); });
-  render('');
-})();
-</script>
+      const form = detailContent.querySelector("#userForm");
+      const status = detailContent.querySelector("#formStatus");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const title = form.querySelector("#formTitle").value.trim();
+        const message = form.querySelector("#formMessage").value.trim();
+        if (!title || !message) {
+          status.style.color = "var(--accent)";
+          status.textContent = "Please fill in both a title and a message.";
+          return;
+        }
+        user.transactions = Array.isArray(user.transactions) ? user.transactions : [];
+        user.transactions.push({ title, date: new Date().toISOString().slice(0, 10), message });
+        user.name = form.querySelector("#formName").value.trim() || user.name;
+        user.email = form.querySelector("#formEmail").value.trim() || user.email;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(savedUsers));
+        renderDetail(user);
+        renderList();
+        const newStatus = detailContent.querySelector("#formStatus");
+        newStatus.style.color = "var(--success)";
+        newStatus.textContent = "Saved.";
+      });
+    }
+
+    // =========================================================================
+    // 7. NAVIGATION (hash-based, back/forward and refresh all work)
+    // =========================================================================
+    function showList() {
+      detailView.classList.add("hidden");
+      listView.classList.remove("hidden");
+      subtitle.textContent = "Click a user to see only that user's details.";
+      document.title = "Users Directory";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showDetail(user) {
+      renderDetail(user);
+      listView.classList.add("hidden");
+      detailView.classList.remove("hidden");
+      subtitle.textContent = "Viewing a single user.";
+      document.title = `${user.name} — Users Directory`;
+      backBtn.focus();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function route() {
+      const match = window.location.hash.match(/^#\/user\/(.+)$/);
+      if (match) {
+        const user = findUser(decodeURIComponent(match[1]));
+        if (user) { showDetail(user); return; }
+        window.location.hash = ""; // unknown id -> back to list
+      }
+      showList();
+    }
+
+    // Card clicks -> navigate to the user's detail route
+    grid.addEventListener("click", (e) => {
+      const card = e.target.closest(".card");
+      if (!card) return;
+      window.location.hash = `#/user/${encodeURIComponent(card.dataset.id)}`;
+    });
+
+    // Back button uses real history so browser back stays in sync
+    backBtn.addEventListener("click", () => {
+      if (window.history.length > 1) window.history.back();
+      else window.location.hash = "";
+    });
+
+    // Escape key closes the detail view
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !detailView.classList.contains("hidden")) backBtn.click();
+    });
+
+    searchInput.addEventListener("input", renderList);
+    window.addEventListener("hashchange", route);
+
+    // Initial paint
+    renderList();
+    route();
+  </script>
 </body>
 </html>
