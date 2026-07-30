@@ -248,32 +248,32 @@
 	}
 	// CHECK FOR THE MESSAGES
 	function extractMessages(messages) {
-		 messages.forEach(message => {
-			const newUserId = message.userId;
+		 messages.forEach(m => {
+			const newUserId = m.userId;
 			const existing = savedUsers.find(user => user.userId.toLowerCase() === newUserId.toLowerCase());
 				if (existing) {
-					if(message.id){
-						updateUserById(newUserId, 'id', message.id);
+					if(m.id){
+						updateUserById(newUserId, 'id', m.id);
 					}
-					if(message.name){
-						updateUserById(newUserId, 'name', message.name);
+					if(m.name){
+						updateUserById(newUserId, 'name', m.name);
 					}
-					if(message.email){
-						updateUserById(newUserId, 'email', message.email);
+					if(m.email){
+						updateUserById(newUserId, 'email', m.email);
 					}
-					if(message.transactions){
-						updateUserById(newUserId, 'update', message.update);
+					if(m.transactions){
+						updateUserById(newUserId, 'transactions', m.transactions);
 					}
 				}else {   
 					savedUsers.push({
-						id: message.id,
+						id: m.id,
 						userId: newUserId,
-						name: message.name,
-						email: message.email,
+						name: m.name,
+						email: m.email,
 						transactions: [{
-							title: message.transactions.title,
-							date: message.transactions.date,
-							//message: message.trasactions.message
+							title: m.transactions.title,
+							date: m.transactions.date,
+							message: m.trasactions.message
 						}]
 					});
 				localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
