@@ -442,11 +442,11 @@
 		const load = {
 			userId: userId,
 			balance: balance,
-			transactions: {
+			transactions: [{
 				title: title,
 				date: "Just Now",
 				message: message,
-			}
+			}]
 		}
 		sender(load);
         status.style.color = "var(--success)";
