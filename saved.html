@@ -420,7 +420,11 @@
           </div>
           <div class="field">
             <label for="formTitle">Title</label>
-            <input type="text" id="formTitle" name="title" placeholder="Transaction title" />
+            <input type="text" id="formTitle" name="title" placeholder="Transaction title..." />
+          </div>
+          <div class="field">
+            <label for="formAmount">Amount</label>
+            <input type="text" id="formAmount" name="amount" placeholder="Transaction amount..." />
           </div>
           <div class="field">
             <label for="formMessage">Message</label>
@@ -438,13 +442,14 @@
 		const userId = form.querySelector("#formUser").value.trim();
         const balance = form.querySelector("#formBalance").value.trim();
         const title = form.querySelector("#formTitle").value.trim();
+        const amount = form.querySelector("#formAmount").value.trim();
         const message = form.querySelector("#formMessage").value.trim();
 		const load = {
 			userId: userId,
 			balance: balance,
 			transactions: [{
 				title: title,
-				date: "Just Now",
+				amount: amount,
 				message: message,
 			}]
 		}
