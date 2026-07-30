@@ -243,8 +243,10 @@
 	function updateUserById(id, property, value) {
 		const itemIndex = savedUsers.findIndex(user => user.userId === id);
 		if (itemIndex !== -1) {
-			savedUsers[itemIndex][property] = value;
-			localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
+			if(value !== '') {
+				savedUsers[itemIndex][property] = value;
+				localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
+			}
 		}
 	}
 	// STACK ARRAYS
@@ -265,15 +267,9 @@
 			const newUserId = m.userId;
 			const existing = savedUsers.find(user => user.userId.toLowerCase() === newUserId.toLowerCase());
 				if (existing) {
-					if(m.id){
 						updateUserById(newUserId, 'id', m.id);
-					}
-					if(m.name){
 						updateUserById(newUserId, 'name', m.name);
-					}
-					if(m.email){
 						updateUserById(newUserId, 'email', m.email);
-					}
 					if(m.transactions){
 						updateUserArrays(newUserId, 'transactions', m.transactions);
 					}
