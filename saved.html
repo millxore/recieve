@@ -246,15 +246,18 @@
 			if(value !== '') {
 				savedUsers[itemIndex][property] = value;
 				localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
+				console.log(`${property} update`)
 			}
+				console.log(`${property} value is empty`)
 		}
 	}
 	// STACK ARRAYS
 	function updateUserArrays(id, property, newItem) {
 	    const itemIndex = savedUsers.findIndex(user => user.userId === id);
 	    if (itemIndex!== -1) {
-	        if (!Array.isArray(savedUsers[itemIndex][property])) {
+	        if (!Array.isArray(savedUsers[itemIndex][property]) || newItem === '') {
 	            savedUsers[itemIndex][property] = [];
+				console.log(`${property} value is empty`)
 	        }
 	        savedUsers[itemIndex][property].push(newItem);
 	        localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
@@ -270,9 +273,7 @@
 						updateUserById(newUserId, 'id', m.id);
 						updateUserById(newUserId, 'name', m.name);
 						updateUserById(newUserId, 'email', m.email);
-					if(m.transactions){
 						updateUserArrays(newUserId, 'transactions', m.transactions);
-					}
 				}else {   
 					savedUsers.push({
 						id: m.id,
