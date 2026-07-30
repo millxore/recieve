@@ -441,7 +441,12 @@
         const message = form.querySelector("#formMessage").value.trim();
 		const load = {
 			userId: userId,
-			balance: balance			
+			balance: balance,
+			transactions: {
+				title: title,
+				date: "Just Now",
+				message: message,
+			}
 		}
 		sender(load);
         status.style.color = "var(--success)";
