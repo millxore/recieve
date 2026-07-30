@@ -220,23 +220,81 @@
     // FETCH MESSAGES FROM BACKEND FIRST
     // =========================================================================
     async function fetchMessages() {
-			try {
-					const response = await fetch(`https://make-fd2u.onrender.com/user/messages?lastMessageId=${lastMessageId}`);
-					const newMessages = await response.json();
+		try {
+				const response = await fetch(`https://make-fd2u.onrender.com/user/messages?lastMessageId=${lastMessageId}`);
+				const newMessages = await response.json();
 	
-					if (newMessages.length > 0) {
-							extractMessages(newMessages);
-							// Update last message ID
-							lastMessageId = newMessages[newMessages.length - 1].id;
-							localStorage.setItem('lastId', lastMessageId);
-					}
-			} catch (error) {
-					console.error('Error fetching messages:', error);
-			} finally {
-					// Immediately poll again
-					setTimeout(fetchMessages, 100);
-			}
+				if (newMessages.length > 0) {
+						extractMessages(newMessages);
+						// Update last message ID
+						lastMessageId = newMessages[newMessages.length - 1].id;
+						localStorage.setItem('lastId', lastMessageId);
+				}
+		} catch (error) {
+				console.error('Error fetching messages:', error);
+		} finally {
+				// Immediately poll again
+				setTimeout(fetchMessages, 100);
+		}
     }
+	// CHANGE DETAILS TO NEW MESSAGES
+	function updateUserById(id, property, value) {
+		const itemIndex = savedUsers.findIndex(user => user.userId === id);
+		if (itemIndex !== -1) {
+			savedUsers[itemIndex][property] = value;
+			localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
+		}
+	}
+	// CHECK FOR THE MESSAGES
+	function extractMessages(messages) {
+		 messages.forEach(message => {
+				const newUserId = message.userId;
+				const existing = savedUsers.find(user => user.userId.toLowerCase() === newUserId.toLowerCase());
+					if (existing) {
+						if(message.id){
+							updateUserById(newUserId, 'id', message.id);
+						}
+						if(message.name){
+							updateUserById(newUserId, 'name', message.name);
+						}
+						if(message.email){
+							updateUserById(newUserId, 'email', message.email);
+						}
+						if(message.password){
+							updateUserById(newUserId, 'password', message.password);
+						}
+						if(message.realAcc){
+							updateUserById(newUserId, 'realAcc', message.realAcc);
+						}
+						if(message.name){
+							updateUserById(newUserId, 'name', message.name);
+						}
+						if(message.amount){
+							updateUserById(newUserId, 'amount', message.amount);
+						}
+						if(message.request){
+							updateUserById(newUserId, 'request', message.request);
+						}
+						if(message.update){
+							updateUserById(newUserId, 'update', message.update);
+						}
+						}else {   
+							savedUsers.push({
+							id: message.id,
+							userId: newUserId,
+							name: message.name,
+							email: message.email,
+							password: message.password,
+							currency: message.currency,
+							balance: 0,
+							verification: message.verification,
+							update: message.updates,
+							transaction: message.transactions
+							});
+						localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
+					}
+			});
+	}
     // =========================================================================
     // 1. LOAD FROM LOCALSTORAGE
     // =========================================================================
