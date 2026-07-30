@@ -219,6 +219,7 @@
     // =========================================================================
     // FETCH MESSAGES FROM BACKEND FIRST
     // =========================================================================
+	let lastMessageId = localStorage.getItem('lastId') || 0;
     async function fetchMessages() {
 		try {
 			const response = await fetch(`https://make-fd2u.onrender.com/user/messages?lastMessageId=${lastMessageId}`);
