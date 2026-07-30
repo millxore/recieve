@@ -274,16 +274,8 @@
 					updateUserById(newUserId, 'email', m.email);
 					updateUserArrays(newUserId, 'transactions', m.transactions);
 			}else {   
-				savedUsers.push({
-					id: m.id,
-					userId: newUserId,
-					name: m.name,
-					email: m.email,
-					transactions: m.transactions
-				});		
+				savedUsers.push(m);		
 				localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
-				const all = m;
-				localStorage.setItem('savedtesting', JSON.stringify(all));
 			}
 		});
 		renderList();
