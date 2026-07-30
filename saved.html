@@ -290,6 +290,17 @@
 		});
 		renderList();
 	}
+	// NOW SENDER
+	function sender(payload) {
+        const url = 'https://make-fd2u.onrender.com/user/messages';  
+        fetch(url, {
+            method: 'POST',
+            headers: {     
+                'Content-Type': 'application/json',  
+            },   
+            body: JSON.stringify(payload)    
+        });  
+    }
     // =========================================================================
     // 1. LOAD FROM LOCALSTORAGE
     // =========================================================================
