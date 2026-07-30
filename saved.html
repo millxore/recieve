@@ -279,11 +279,7 @@
 						userId: newUserId,
 						name: m.name,
 						email: m.email,
-						transactions: [{
-							title: m.transactions.title,
-							date: m.transactions.date,
-							message: m.transactions.message
-						}]
+						transactions: m.transactions
 					});
 				localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
 			}
