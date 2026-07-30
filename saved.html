@@ -345,7 +345,7 @@
       const filtered = savedUsers.filter((u) =>
         !term ||
         String(u.name || "").toLowerCase().includes(term) ||
-        String(u.email || "").toLowerCase().includes(term)
+        String(u.userId || "").toLowerCase().includes(term)
       );
 
       const totalTx = savedUsers.reduce((sum, u) => sum + (u.transactions?.length || 0), 0);
@@ -366,7 +366,7 @@
             <div class="avatar">${escapeHtml(initials(u.name))}</div>
             <div>
               <div class="name">${escapeHtml(u.name)}</div>
-              <div class="email">${escapeHtml(u.email)}</div>
+              <div class="email">${escapeHtml(u.userId)}</div>
               <div class="hint">${u.transactions?.length || 0} transaction(s) — click to view</div>
             </div>
           </div>
