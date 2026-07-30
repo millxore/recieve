@@ -150,7 +150,7 @@
     }
     .tx-top { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
     .tx-title { font-weight: 600; font-size: 0.98rem; }
-    .tx-date { font-size: 0.78rem; color: var(--text-secondary); white-space: nowrap; }
+    .tx-amount { font-size: 0.78rem; color: var(--text-secondary); white-space: nowrap; }
     .tx-message { margin-top: 0.35rem; font-size: 0.88rem; color: var(--text-secondary); }
 
     .user-form { margin-top: 1.5rem; display: grid; gap: 0.9rem; }
@@ -395,7 +395,7 @@
                 <li class="tx">
                   <div class="tx-top">
                     <span class="tx-title">${escapeHtml(t.title)}</span>
-                    <span class="tx-date">${formatDate(t.date)}</span>
+                    <span class="tx-amount">${formatDate(t.amount)}</span>
                   </div>
                   <p class="tx-message">${escapeHtml(t.message)}</p>
                 </li>`).join("")}</ul>`
