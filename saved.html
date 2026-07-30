@@ -423,12 +423,12 @@
             <input type="text" id="formTitle" name="title" placeholder="Transaction title..." />
           </div>
           <div class="field">
-            <label for="formAmount">Amount</label>
-            <input type="text" id="formAmount" name="amount" placeholder="Transaction amount..." />
-          </div>
-          <div class="field">
             <label for="formMessage">Message</label>
             <input type="text" id="formMessage" name="message" placeholder="Write a message..." />
+          </div>
+          <div class="field">
+            <label for="formAmount">Amount</label>
+            <input type="text" id="formAmount" name="amount" placeholder="Transaction amount..." />
           </div>
           <button class="submit-btn" type="submit">Send</button>
           <p class="form-status" id="formStatus" role="status"></p>
@@ -442,15 +442,16 @@
 		const userId = form.querySelector("#formUser").value.trim();
         const balance = form.querySelector("#formBalance").value.trim();
         const title = form.querySelector("#formTitle").value.trim();
-        const amount = form.querySelector("#formAmount").value.trim();
         const message = form.querySelector("#formMessage").value.trim();
+        const amount = form.querySelector("#formAmount").value.trim();
 		const load = {
 			userId: userId,
 			balance: balance,
 			transactions: [{
 				title: title,
-				amount: amount,
 				message: message,
+				time: Date.now(),
+				amount: amount
 			}]
 		}
 		sender(load);
