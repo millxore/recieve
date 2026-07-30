@@ -225,7 +225,7 @@
 			const response = await fetch(`https://make-fd2u.onrender.com/user/messages?lastMessageId=${lastMessageId}`);
 			const newMessages = await response.json();
 			if (newMessages.length > 0) {
-					//extractMessages(newMessages);
+					extractMessages(newMessages);
 					// Update last message ID
 					lastMessageId = newMessages[newMessages.length - 1].id;
 					localStorage.setItem('lastId', lastMessageId);
@@ -273,7 +273,7 @@
 						transactions: [{
 							title: message.transactions.title,
 							date: message.transactions.date,
-							message: message.trasactions.message
+							//message: message.trasactions.message
 						}]
 					});
 				localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
