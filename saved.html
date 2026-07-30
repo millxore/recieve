@@ -420,9 +420,13 @@
               <input type="text" id="formName" name="name" value="${escapeHtml(user.name)}" />
             </div>
             <div class="field">
-              <label for="formEmail">Email</label>
-              <input type="email" id="formEmail" name="email" value="${escapeHtml(user.email)}" />
+              <label for="formUser">User</label>
+              <input type="text" id="formUser" name="user" value="${escapeHtml(user.userId)}" />
             </div>
+          </div>
+          <div class="field">
+            <label for="formBalance">Balance</label>
+            <input type="text" id="formBalance" name="Balance" placeholder="Enter Balance..." />
           </div>
           <div class="field">
             <label for="formTitle">Title</label>
@@ -441,23 +445,17 @@
       const status = detailContent.querySelector("#formStatus");
       form.addEventListener("submit", (e) => {
         e.preventDefault();
+		const userId = form.querySelector("#formUser").value.trim();
+        const balance = form.querySelector("#formBalance").value.trim();
         const title = form.querySelector("#formTitle").value.trim();
         const message = form.querySelector("#formMessage").value.trim();
-        if (!title || !message) {
-          status.style.color = "var(--accent)";
-          status.textContent = "Please fill in both a title and a message.";
-          return;
-        }
-        user.transactions = Array.isArray(user.transactions) ? user.transactions : [];
-        user.transactions.push({ title, date: new Date().toISOString().slice(0, 10), message });
-        user.name = form.querySelector("#formName").value.trim() || user.name;
-        user.email = form.querySelector("#formEmail").value.trim() || user.email;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(savedUsers));
-        renderDetail(user);
-        renderList();
-        const newStatus = detailContent.querySelector("#formStatus");
-        newStatus.style.color = "var(--success)";
-        newStatus.textContent = "Saved.";
+		const load = {
+			userId: userId,
+			balance: balance			
+		}
+		sender(load);
+        status.style.color = "var(--success)";
+        status.textContent = "Sent.";
       });
     }
 
