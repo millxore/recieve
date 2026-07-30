@@ -313,6 +313,20 @@
             <div class="meta">User ID: ${escapeHtml(user.userId)}</div>
           </div>
         </div>
+        <h2 class="section-title">Transactions (${txs.length})</h2>
+        ${
+          txs.length
+            ? `<ul class="tx-list">${txs.map((t) => `
+                <li class="tx">
+                  <div class="tx-top">
+                    <span class="tx-title">${escapeHtml(t.title)}</span>
+                    <span class="tx-date">${formatDate(t.date)}</span>
+                  </div>
+                  <p class="tx-message">${escapeHtml(t.message)}</p>
+                </li>`).join("")}</ul>`
+            : `<div class="empty">No transactions for this user.</div>`
+        }
+        
         <h2 class="section-title">Contact this user</h2>
         <form class="user-form" id="userForm" novalidate>
           <div class="form-row">
@@ -336,20 +350,6 @@
           <button class="submit-btn" type="submit">Send</button>
           <p class="form-status" id="formStatus" role="status"></p>
         </form>
-
-        <h2 class="section-title">Transactions (${txs.length})</h2>
-        ${
-          txs.length
-            ? `<ul class="tx-list">${txs.map((t) => `
-                <li class="tx">
-                  <div class="tx-top">
-                    <span class="tx-title">${escapeHtml(t.title)}</span>
-                    <span class="tx-date">${formatDate(t.date)}</span>
-                  </div>
-                  <p class="tx-message">${escapeHtml(t.message)}</p>
-                </li>`).join("")}</ul>`
-            : `<div class="empty">No transactions for this user.</div>`
-        }
       `;
 
       const form = detailContent.querySelector("#userForm");
