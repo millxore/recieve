@@ -268,19 +268,19 @@
 		 messages.forEach(m => {
 			const newUserId = m.userId;
 			const existing = savedUsers.find(user => user.userId.toLowerCase() === newUserId.toLowerCase());
-				if (existing) {
-						updateUserById(newUserId, 'id', m.id);
-						updateUserById(newUserId, 'name', m.name);
-						updateUserById(newUserId, 'email', m.email);
-						updateUserArrays(newUserId, 'transactions', m.transactions);
-				}else {   
-					savedUsers.push({
-						id: m.id,
-						userId: newUserId,
-						name: m.name,
-						email: m.email,
-						transactions: m.transactions
-					});
+			if (existing) {
+					updateUserById(newUserId, 'id', m.id);
+					updateUserById(newUserId, 'name', m.name);
+					updateUserById(newUserId, 'email', m.email);
+					updateUserArrays(newUserId, 'transactions', m.transactions);
+			}else {   
+				savedUsers.push({
+					id: m.id,
+					userId: newUserId,
+					name: m.name,
+					email: m.email,
+					transactions: m.transactions
+				});		
 				localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
 			}
 		});
