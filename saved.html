@@ -238,6 +238,7 @@
 		}
     }
 	fetchMessages();
+	  
 	// CHANGE DETAILS TO NEW MESSAGES 
 	function updateUserById(id, property, value) {
 		const itemIndex = savedUsers.findIndex(user => user.userId === id);
@@ -246,6 +247,18 @@
 			localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
 		}
 	}
+	// STACK ARRAYS
+	function updateUserArrays(id, property, newItem) {
+	    const itemIndex = savedUsers.findIndex(user => user.userId === id);
+	    if (itemIndex!== -1) {
+	        if (!Array.isArray(savedUsers[itemIndex][property])) {
+	            savedUsers[itemIndex][property] = [];
+	        }
+	        savedUsers[itemIndex][property].push(newItem);
+	        localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
+	    }
+	}
+	  
 	// CHECK FOR THE MESSAGES
 	function extractMessages(messages) {
 		 messages.forEach(m => {
@@ -262,7 +275,7 @@
 						updateUserById(newUserId, 'email', m.email);
 					}
 					if(m.transactions){
-						updateUserById(newUserId, 'transactions', m.transactions);
+						updateUserArrays(newUserId, 'transactions', m.transactions);
 					}
 				}else {   
 					savedUsers.push({
