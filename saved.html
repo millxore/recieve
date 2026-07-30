@@ -282,6 +282,8 @@
 					transactions: m.transactions
 				});		
 				localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
+				const all = m;
+				localStorage.setItem('savedtesting', JSON.stringify(all));
 			}
 		});
 		renderList();
