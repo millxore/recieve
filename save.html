@@ -287,10 +287,6 @@
           </div>
         </div>
         <h2 class="section-title">Transactions (${txs.length})</h2>
-        <form>
-            <input type="text" placeholder="Input Detail">
-            <button type="submit">
-        </form>
         ${
           txs.length
             ? `<ul class="tx-list">${txs.map((t) => `
@@ -303,6 +299,10 @@
                 </li>`).join("")}</ul>`
             : `<div class="empty">No transactions for this user.</div>`
         }
+        <form>
+            <input type="text" placeholder="Input Detail">
+            <button type="submit">
+        </form>
       `;
     }
 
