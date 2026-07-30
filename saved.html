@@ -251,14 +251,14 @@
 		}
 	}
 	// STACK ARRAYS
-	function updateUserArrays(id, property, newItem) {
+	function updateUserArrays(id, property, newItems) {
 	    const itemIndex = savedUsers.findIndex(user => user.userId === id);
 	    if (itemIndex!== -1) {
-	        if (!Array.isArray(savedUsers[itemIndex][property]) || newItem === '') {
+	        if (!Array.isArray(savedUsers[itemIndex][property]) || newItems === '') {
 	            savedUsers[itemIndex][property] = [];
 				console.log(`${property} value is empty`)
 	        }
-	        savedUsers[itemIndex][property].push(newItem);
+			savedUsers[itemIndex][property].push(...newItems);
 	        localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
 	    }
 	}
