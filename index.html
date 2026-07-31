@@ -362,13 +362,26 @@
     // =========================================================================
     function renderDetail(user) {
       const txs = Array.isArray(user.transactions) ? user.transactions : [];
-	  let html = "";
-	  for (const key in user) {
-		  if (Object.hasOwn(user, key)) {
-			  html += `<p><strong>${key}:</strong> ${user[key]}</p>`;
+	  
+	  function renderValue(value) {
+		  if (Array.isArray(value)) {
+		    return "<ul>" + value.map(item => {
+		      if (typeof item === 'object' && item !== null) {return `<li>${renderObject(item)}</li>`;}
+		      return `<li>${item}</li>`;
+		    }).join('') + "</ul>";
 		  }
+		  if (typeof value === 'object' && value !== null) {return renderObject(value);}
+		  return value;
+	  }	
+	  function renderObject(obj) {
+		  let html = "<ul>";
+		  for (const key in obj) {
+		    if (Object.hasOwn(obj, key)) { html += `<li><strong>${key}:</strong> ${renderValue(obj[key])}</li>`;}
+		  }
+		  html += "</ul>";
+		  return html;
 	  }
-	  text.innerHTML = html; 
+	  text.innerHTML = renderValue(value); 
       detailContent.innerHTML = `
 	  	<div class="detail-head">
           <div class="avatar lg">${escapeHtml(initials(user.name))}</div>
