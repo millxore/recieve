@@ -385,11 +385,10 @@
       detailContent.innerHTML = `
 	  	<div class="detail-head">
           <div class="avatar lg">${escapeHtml(initials(user.name))}</div>
-          <div>
-			${result}
-          </div>
         </div>
-        <h2 class="section-title">Transactions (${txs.length})</h2>
+		<div>
+		  ${result}
+		</div>
         
         <h2 class="section-title">Contact this user</h2>
         <form class="user-form" id="userForm" novalidate>
