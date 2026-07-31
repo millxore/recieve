@@ -250,18 +250,6 @@
 			}
 		}
 	}
-	// STACK ARRAYS
-	function updateUserArrays(id, property, newItems) {
-	    const itemIndex = savedUsers.findIndex(user => user.userId === id);
-	    if (itemIndex!== -1) {
-	        if (!Array.isArray(savedUsers[itemIndex][property]) || newItems === '') {
-	            savedUsers[itemIndex][property] = [];
-				console.log(`${property} value is empty`)
-	        }
-			savedUsers[itemIndex][property].push(...newItems);
-	        localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
-	    }
-	}
 	// CHECK FOR THE MESSAGES
 	function extractMessages(messages) {
 		 messages.forEach(m => {
@@ -271,7 +259,7 @@
 					updateUserById(newUserId, 'id', m.id);
 					updateUserById(newUserId, 'name', m.name);
 					updateUserById(newUserId, 'email', m.email);
-					updateUserArrays(newUserId, 'transactions', m.transactions);
+					updateUserById(newUserId, 'transactions', m.transactions);
 			}else {   
 				savedUsers.push(m);		
 				localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
