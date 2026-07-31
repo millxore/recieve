@@ -359,7 +359,7 @@
 		      });
 		      html += `</div></div>`;
 		    } else if (value && typeof value === 'object') { 
-				html += `<div onclick="this.classList.toggle('hidden');"><b class="label">${label}:</b> <div class="" style="margin-left: 20px;">${objectToHTML(value)}</div></div>`; } 
+				html += `<div><b class="label">${label}:</b> <div class="" style="margin-left: 20px;">${objectToHTML(value)}</div></div>`; } 
 			else { 
 				html += `<div><b class="label">${label}:</b> ${value}</div>`; }
 		  }
