@@ -360,6 +360,22 @@
     // =========================================================================
     function renderDetail(user) {
       const txs = Array.isArray(user.transactions) ? user.transactions : [];
+	  function objectToHTML(obj) {
+		  let html = '';
+		  for (const [key, value] of Object.entries(obj)) {
+			  const label = key.charAt(0).toUpperCase() + key.slice(1);
+			  if (value && typeof value === 'object' && !Array.isArray(value)) {
+				  html += `<div><b>${label}:</b> <div style="margin-left: 20px;">${objectToHTML(value)}</div></div>`;
+			  } else {
+				  html += `<div><b>${label}:</b> ${value}</div>`;
+			  }
+		  }
+		  return html;
+	  }
+	  const finalHTML = user.map(item => {	
+		  const formatted = objectToHTML(item);
+		  return `<div style="margin-bottom: 20px; border: 1px solid #ccc; padding: 10px;">${formatted}</div>`;
+	  }).join('');
 	  const allDetails = Object.entries(user).map(([key, value]) => { return `<p><strong>${key.toUpperCase()}:</strong> ${value}</p>`; }).join('');
       detailContent.innerHTML = `
 	  	<div class="detail-head">
@@ -368,7 +384,7 @@
             <div class="name">${escapeHtml(user.name)}</div>
             <div class="email">${escapeHtml(user.email)}</div>
             <div class="meta">User ID: ${escapeHtml(user.userId)}</div>
-			${allDetails}
+			${finalHTML}
           </div>
         </div>
         <h2 class="section-title">Transactions (${txs.length})</h2>
