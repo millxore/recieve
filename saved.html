@@ -271,7 +271,7 @@
 	    const currentArray = savedUsers[itemIndex][property];
 	    const itemsToAdd = Array.isArray(newItems)? newItems : [newItems];
 	    for (const newItem of itemsToAdd) {
-	        const alreadyExists = currentArray.forEach(existing => existing.time.toLowerCase() === newItem.item.toLowerCase());
+	        const alreadyExists = currentArray.find(existing => existing.time.toLowerCase() === newItem.time.toLowerCase());
 	        if (!alreadyExists) {
 	            currentArray.push(newItem);
 	        }
