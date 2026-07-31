@@ -360,7 +360,7 @@
     // =========================================================================
     function renderDetail(user) {
       const txs = Array.isArray(user.transactions) ? user.transactions : [];
-	  const allDetails = Object.entries(user).map(([key, value]) => { return `<p><strong>${key.toUpperCase}:</strong> ${value}</p>`; }).join('');
+	  const allDetails = Object.entries(user).map(([key, value]) => { return `<p><strong>${key.toUpperCase()}:</strong> ${value}</p>`; }).join('');
       detailContent.innerHTML = `
 	  	<div class="detail-head">
           <div class="avatar lg">${escapeHtml(initials(user.name))}</div>
