@@ -359,16 +359,11 @@
     // =========================================================================
     function renderDetail(user) {
       const txs = Array.isArray(user.transactions) ? user.transactions : [];
-      detailContent.innerHTML = `
-        <div class="detail-head">
-          <div class="avatar lg">${escapeHtml(initials(user.name))}</div>
-          <div>
-            <div class="name">${escapeHtml(user.name)}</div>
-            <div class="email">${escapeHtml(user.email)}</div>
-            <div class="meta">User ID: ${escapeHtml(user.userId)}</div>
-          </div>
-        </div>
-        <h2 class="section-title">Transactions (${txs.length})</h2>
+      detailContent.innerHTML = 
+		  Object.entries(user).map(([key, value]) => {
+			  return `<p><strong>${key}:</strong> ${value}</p>`;
+		  }).join('');
+		`
         ${
           txs.length
             ? `<ul class="tx-list">${txs.map((t) => `
