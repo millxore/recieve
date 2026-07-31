@@ -359,6 +359,7 @@
     // =========================================================================
     function renderDetail(user) {
 	  function objectToHTML(obj) {
+		  const txs = Array.isArray(user.transactions) ? user.transactions : [];
 		  let html = '';
 		  for (const [key, value] of Object.entries(obj)) {
 		    const label = key.toUpperCase();
