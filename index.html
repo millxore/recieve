@@ -360,7 +360,7 @@
     function renderDetail(user) {
       const txs = Array.isArray(user.transactions) ? user.transactions : [];
       detailContent.innerHTML = `
-	    Object.entries(user).map(([key, value]) => {return `<p><strong>${key}:</strong> ${value}</p>`;}).join('');
+	    Object.entries(user).map(([key, value]) => {return <p><strong>${key}:</strong> ${value}</p>;}).join(''),
 	  	<div class="detail-head">
           <div class="avatar lg">${escapeHtml(initials(user.name))}</div>
           <div>
