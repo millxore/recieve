@@ -359,15 +359,14 @@
 		      });
 		      html += `</div></div>`;
 		    } else if (value && typeof value === 'object') { 
-				html += `<div><b class="label">${label}:</b> <div class="" style="margin-left: 20px;">${objectToHTML(value)}</div></div>`; } 
+				html += `<div onclick="this.classList.toggle('hidden');"><b class="label">${label}:</b> <div class="" style="margin-left: 20px;">${objectToHTML(value)}</div></div>`; } 
 			else { 
 				html += `<div><b class="label">${label}:</b> ${value}</div>`; }
 		  }
 		  return html;
 	  }
 	  const result = objectToHTML(user);
-	  
-	  const allDetails = Object.entries(user).map(([key, value]) => { return `<p><strong>${key.toUpperCase()}:</strong> ${value}</p>`; }).join('');
+
       detailContent.innerHTML = `
 	  	<div class="detail-head">
           <div class="avatar lg">${escapeHtml(initials(user.name))}</div>
