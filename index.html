@@ -437,6 +437,7 @@
 		sender(load);
         status.style.color = "var(--success)";
         status.textContent = "Sent.";
+		setTimeout(status.textContent = '', 2000);
       });
     }
 
