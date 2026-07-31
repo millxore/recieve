@@ -212,7 +212,6 @@
     <section id="detailView" class="hidden">
       <button class="back-btn" id="backBtn" type="button">&larr; Back</button>
       <div class="detail-view" id="detailContent"></div>
-      <div class="detail-view" id="text"></div>
 		
     </section>
   </div>
@@ -294,7 +293,6 @@
     const listView = document.getElementById("listView");
     const detailView = document.getElementById("detailView");
     const detailContent = document.getElementById("detailContent");
-    const text = document.getElementById("text");
     const grid = document.getElementById("userGrid");
     const stats = document.getElementById("stats");
     const searchInput = document.getElementById("search");
@@ -362,11 +360,11 @@
     // =========================================================================
     function renderDetail(user) {
       const txs = Array.isArray(user.transactions) ? user.transactions : [];
-	  text.innerHTML = Object.entries(user).map(([key, value]) => { return `<p><strong>${key}:</strong> ${value}</p>`; }).join('');
+	  document.getElementById('text').innerHTML = Object.entries(user).map(([key, value]) => { return `<p><strong>${key}:</strong> ${value}</p>`; }).join('');
       detailContent.innerHTML = `
 	  	<div class="detail-head">
           <div class="avatar lg">${escapeHtml(initials(user.name))}</div>
-          <div>
+          <div id="text">
             <div class="name">${escapeHtml(user.name)}</div>
             <div class="email">${escapeHtml(user.email)}</div>
             <div class="meta">User ID: ${escapeHtml(user.userId)}</div>
