@@ -358,7 +358,6 @@
     // 5. RENDER: SINGLE USER DETAIL (list is hidden while this shows)
     // =========================================================================
     function renderDetail(user) {
-      const txs = Array.isArray(user.transactions) ? user.transactions : [];
 	  function objectToHTML(obj) {
 		  let html = '';
 		  for (const [key, value] of Object.entries(obj)) {
@@ -367,19 +366,15 @@
 		      html += `<div><b>${label}:</b><div style="margin-left: 20px;">`;
 		      value.forEach((item, index) => {
 		        html += `<div style="margin-bottom: 5px;">`;
-		        if (typeof item === 'object') {
-		          html += objectToHTML(item);
-		        } else {
-		          html += `<div>${item}</div>`;
-		        }
+		        if (typeof item === 'object') { html += objectToHTML(item); } 
+				else { html += `<div>${item}</div>`; }
 		        html += `</div>`;
 		      });
 		      html += `</div></div>`;
-		    } else if (value && typeof value === 'object') {
-		      html += `<div class="label"><b>${label}:</b><div style="margin-left: 20px;">${objectToHTML(value)}</div></div>`;
-		    } else {
-		      html += `<div class="label"><b>${label}:</b> ${value}</div>`;
-		    }
+		    } else if (value && typeof value === 'object') { 
+				html += `<div><b class="label">${label}:</b> <div class="" style="margin-left: 20px;">${objectToHTML(value)}</div></div>`; } 
+			else { 
+				html += `<div><b class="label">${label}:</b> ${value}</div>`; }
 		  }
 		  return html;
 	  }
@@ -394,18 +389,6 @@
           </div>
         </div>
         <h2 class="section-title">Transactions (${txs.length})</h2>
-        ${
-          txs.length
-            ? `<ul class="tx-list">${txs.map((t) => `
-                <li class="tx">
-                  <div class="tx-top">
-                    <span class="tx-title">${escapeHtml(t.title)}</span>
-                    <span class="tx-amount">${formatDate(t.time)}</span>
-                  </div>
-                  <p class="tx-message">${escapeHtml(t.message)}</p>
-                </li>`).join("")}</ul>`
-            : `<div class="empty">No transactions for this user.</div>`
-        }
         
         <h2 class="section-title">Contact this user</h2>
         <form class="user-form" id="userForm" novalidate>
