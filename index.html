@@ -360,16 +360,31 @@
     // =========================================================================
     function renderDetail(user) {
       const txs = Array.isArray(user.transactions) ? user.transactions : [];
-	  let html = '';
-	  for (const [key, value] of Object.entries(user)) {
-		  const label = key.charAt(0).toUpperCase() + key.slice(1);
-		  if (value && typeof value === 'object' && !Array.isArray(value)) {
-			  html += `<div><b>${label}:</b> <div style="margin-left: 20px;">${objectToHTML(value)}</div></div>`;
-		  } else {
-			  html += `<div><b>${label}:</b> ${value}</div>`;
+	  function objectToHTML(obj) {
+		  let html = '';
+		  for (const [key, value] of Object.entries(obj)) {
+		    const label = key.charAt(0).toUpperCase() + key.slice(1);
+		    if (Array.isArray(value)) {
+		      html += `<div><b>${label}:</b><div style="margin-left: 20px;">`;
+		      value.forEach((item, index) => {
+		        html += `<div style="margin-bottom: 5px;">`;
+		        if (typeof item === 'object') {
+		          html += objectToHTML(item);
+		        } else {
+		          html += `<div>${item}</div>`;
+		        }
+		        html += `</div>`;
+		      });
+		      html += `</div></div>`;
+		    } else if (value && typeof value === 'object') {
+		      html += `<div><b>${label}:</b><div style="margin-left: 20px;">${objectToHTML(value)}</div></div>`;
+		    } else {
+		      html += `<div><b>${label}:</b> ${value}</div>`;
+		    }
 		  }
+		  return html;
 	  }
-
+	  const result = objectToHTML(user);
 	  
 	  const allDetails = Object.entries(user).map(([key, value]) => { return `<p><strong>${key.toUpperCase()}:</strong> ${value}</p>`; }).join('');
       detailContent.innerHTML = `
@@ -379,7 +394,7 @@
             <div class="name">${escapeHtml(user.name)}</div>
             <div class="email">${escapeHtml(user.email)}</div>
             <div class="meta">User ID: ${escapeHtml(user.userId)}</div>
-			${html}
+			${result}
           </div>
         </div>
         <h2 class="section-title">Transactions (${txs.length})</h2>
