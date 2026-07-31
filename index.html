@@ -358,8 +358,8 @@
     // 5. RENDER: SINGLE USER DETAIL (list is hidden while this shows)
     // =========================================================================
     function renderDetail(user) {
+	  const txs = Array.isArray(user.transactions) ? user.transactions : [];
 	  function objectToHTML(obj) {
-		  const txs = Array.isArray(user.transactions) ? user.transactions : [];
 		  let html = '';
 		  for (const [key, value] of Object.entries(obj)) {
 		    const label = key.toUpperCase();
