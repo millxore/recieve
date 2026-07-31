@@ -372,7 +372,7 @@
 		  }
 		  return html;
 	  }
-	  const finalHTML = user.map(item => {	
+	  const finalHTML = Object.entries(user).map(item => {	
 		  const formatted = objectToHTML(item);
 		  return `<div style="margin-bottom: 20px; border: 1px solid #ccc; padding: 10px;">${formatted}</div>`;
 	  }).join('');
