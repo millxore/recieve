@@ -251,7 +251,7 @@
 		}
 	}
 	// STACK ARRAYS
-	function updateUserArray(id, property, newItems) {
+	function updateUserArrays(id, property, newItems) {
 	    const itemIndex = savedUsers.findIndex(user => user.userId === id);
 	    if (itemIndex!== -1) {
 	        if (!Array.isArray(savedUsers[itemIndex][property]) || newItems === '') {
@@ -262,22 +262,6 @@
 	        localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
 	    }
 	}
-	function updateUserArrays(id, property, newItems) {
-	    const itemIndex = savedUsers.findIndex(user => user.userId === id);
-	    if (itemIndex === -1) return;
-	    if (!Array.isArray(savedUsers[itemIndex][property] || newItems === '')) {
-	        savedUsers[itemIndex][property] = [];
-	    }
-	    const currentArray = savedUsers[itemIndex][property];
-	    const itemsToAdd = Array.isArray(newItems)? newItems : [newItems];
-	    for (const newItem of itemsToAdd) {
-	        const alreadyExists = currentArray.find(existing => existing.time.toLowerCase() === newItem.time.toLowerCase());
-	        if (!alreadyExists) {
-	            currentArray.push(newItem);
-	        }
-	    }
-	    localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
-	}  
 	// CHECK FOR THE MESSAGES
 	function extractMessages(messages) {
 		 messages.forEach(m => {
