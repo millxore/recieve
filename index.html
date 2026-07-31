@@ -238,12 +238,12 @@
 				  if (value!== undefined && value!== null && value!== "") {
 				    existingUser[key] = value;
 					localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
+				    renderDetail(existingUser);
 				  }
 				}
 			}else {   
 				savedUsers.push(m);		
 				localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
-				renderDetail(existingUser);
 			}
 		});
 		renderList();
