@@ -256,10 +256,15 @@
 			const newUserId = m.userId;
 			const existing = savedUsers.find(user => user.userId.toLowerCase() === newUserId.toLowerCase());
 			if (existing) {
-					updateUserById(newUserId, 'id', m.id);
-					updateUserById(newUserId, 'name', m.name);
-					updateUserById(newUserId, 'email', m.email);
-					updateUserById(newUserId, 'transactions', m.transactions);
+				for (const key in existing) {
+				  if (key in m) {
+				    existing[key] = m[key];
+				  }
+				}
+					//updateUserById(newUserId, 'id', m.id);
+					//updateUserById(newUserId, 'name', m.name);
+					//updateUserById(newUserId, 'email', m.email);
+					//updateUserById(newUserId, 'transactions', m.transactions);
 			}else {   
 				savedUsers.push(m);		
 				localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
