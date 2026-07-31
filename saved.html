@@ -239,32 +239,20 @@
     }
 	fetchMessages();
 	  
-	// CHANGE DETAILS TO NEW MESSAGES 
-	function updateUserById(id, property, value) {
-		const itemIndex = savedUsers.findIndex(user => user.userId === id);
-		if (itemIndex !== -1) {
-			if(value !== '') {
-				savedUsers[itemIndex][property] = value;
-				localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
-				console.log(`${property} update`)
-			}
-		}
-	}
+
 	// CHECK FOR THE MESSAGES
 	function extractMessages(messages) {
 		 messages.forEach(m => {
 			const newUserId = m.userId;
-			const existing = savedUsers.find(user => user.userId.toLowerCase() === newUserId.toLowerCase());
-			if (existing) {
-				for (const key in existing) {
-				  if (key in m) {
-				    existing[key] = m[key];
+			const existingUser = savedUsers.find(user => user.userId.toLowerCase() === newUserId.toLowerCase());
+			if (existingUser) {
+				for (const key in m) {
+				  const value = m[key];
+				  if (value!== undefined && value!== null && value!== "") {
+				    existingUser[key] = value;
 				  }
 				}
-					//updateUserById(newUserId, 'id', m.id);
-					//updateUserById(newUserId, 'name', m.name);
-					//updateUserById(newUserId, 'email', m.email);
-					//updateUserById(newUserId, 'transactions', m.transactions);
+				console.log(existing);
 			}else {   
 				savedUsers.push(m);		
 				localStorage.setItem('savedUsers', JSON.stringify(savedUsers));
