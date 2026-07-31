@@ -396,7 +396,7 @@
           </div>
           <div class="field">
             <label for="formBalance">Balance</label>
-            <input type="text" id="formBalance" name="Balance" placeholder="Enter Balance..." />
+            <input type="number" inputmode="numeric" id="formBalance" name="Balance" placeholder="Enter Balance..." />
           </div>
           <div class="field">
             <label for="formTitle">Title</label>
@@ -420,13 +420,13 @@
       form.addEventListener("submit", (e) => {
         e.preventDefault();
 		const userId = form.querySelector("#formUser").value.trim();
-        const balance = form.querySelector("#formBalance").value.trim();
+        const balance = form.querySelector("#formBalance").valueAsNumber;
         const title = form.querySelector("#formTitle").value.trim();
         const message = form.querySelector("#formMessage").value.trim();
         const amount = form.querySelector("#formAmount").value.trim();
 		const load = {
 			userId: userId,
-			balance: balance.valueAsNumber,
+			balance: balance,
 			transactions: [{
 				title: title,
 				message: message,
