@@ -362,7 +362,7 @@
     // =========================================================================
     function renderDetail(user) {
       const txs = Array.isArray(user.transactions) ? user.transactions : [];
-	  text.innerHTML = Object.keys(user).map(key => `<p>Others: ${key}</p>`).join('');
+	  text.innerHTML = Object.entries(user).map(([key, value]) => { return `<p><strong>${key}:</strong> ${value}</p>`; }).join('');
       detailContent.innerHTML = `
 	  	<div class="detail-head">
           <div class="avatar lg">${escapeHtml(initials(user.name))}</div>
