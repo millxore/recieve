@@ -359,9 +359,8 @@
     // =========================================================================
     function renderDetail(user) {
       const txs = Array.isArray(user.transactions) ? user.transactions : [];
-      detailContent.innerHTML = const txs = Array.isArray(user.transactions) ? user.transactions : [];
-      detailContent.innerHTML = 
-		`<div class="detail-head">
+      detailContent.innerHTML = `
+	  	<div class="detail-head">
           <div class="avatar lg">${escapeHtml(initials(user.name))}</div>
           <div>
             <div class="name">${escapeHtml(user.name)}</div>
