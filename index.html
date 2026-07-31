@@ -426,7 +426,7 @@
         const amount = form.querySelector("#formAmount").value.trim();
 		const load = {
 			userId: userId,
-			balance: balance,
+			balance: balance.valueAsNumber,
 			transactions: [{
 				title: title,
 				message: message,
